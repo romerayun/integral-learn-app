@@ -1,0 +1,194 @@
+.datatable-selector.form-select {
+    display: inline;
+    width: inherit;
+}
+
+.flex .form-check {
+    display: inline-block !important;
+}
+
+
+body .form-check.form-check-primary .form-check-input {
+    background-color: #6861ce !important;
+    border-color: #6861ce !important;
+    width: 1.8em;
+    height: 1.8em;
+}
+
+body .form-check.form-check-dark .form-check-input {
+    background-color: #8592a3 !important;
+    border-color: #8592a3 !important;
+    width: 1.8em;
+    height: 1.8em;
+}
+
+body .form-check.form-check-success .form-check-input {
+    background-color: #66c732 !important;
+    border-color: #66c732 !important;
+    width: 1.8em;
+    height: 1.8em;
+}
+
+body .form-check.form-check-info .form-check-input {
+    background-color: #03b0d4 !important;
+    border-color: #03b0d4 !important;
+    width: 1.8em;
+    height: 1.8em;
+}
+
+body .form-check.form-check-danger .form-check-input {
+    background-color: #e6381a !important;
+    border-color: #e6381a !important;
+    width: 1.8em;
+    height: 1.8em;
+}
+
+body .form-check.form-check-warning .form-check-input {
+    background-color: #ffab00 !important;
+    border-color: #ffab00 !important;
+    width: 1.8em;
+    height: 1.8em;
+}
+
+
+body .square-color-primary {
+    width: 2em;
+    height: 2em;
+    background-color:#6861ce !important;
+    border-color:#6861ce !important;
+}
+
+
+body .square-color-dark {
+    width: 2em;
+    height: 2em;
+    background-color:#8592a3 !important;
+    border-color: #8592a3 !important;
+}
+
+
+body .square-color-success {
+    width: 2em;
+    height: 2em;
+    background-color:#66c732 !important;
+    border-color:#66c732 !important;
+}
+
+body .square-color-danger {
+    width: 2em;
+    height: 2em;
+    background-color:#e6381a !important;
+    border-color:#e6381a !important;
+}
+
+body .square-color-info {
+    width: 2em;
+    height: 2em;
+    background-color:#03b0d4 !important;
+    border-color:#03b0d4 !important;
+}
+
+body .square-color-warning {
+    width: 2em;
+    height: 2em;
+    background-color:#ffab00 !important;
+    border-color:#ffab00 !important;
+}
+
+.modal-backdrop.show {
+    z-index: 9999;
+}
+
+.modal {
+    z-index: 99999 !important;
+}
+
+.activity-hours {
+    margin-left: 10px;
+}
+
+.card-action-hours {
+    font-size: 12px;
+}
+
+.card-action-hours:before {
+    content: "Всего на тему: ";
+}
+
+.activity-hours:after, .card-action-hours:after {
+    content: ' ак. ч.';
+}
+
+.theme {
+    background: #f8f8f8 !important;
+}
+
+.empty-activity {
+    background: #f8f8f8 !important;
+    color: #e3e3e3;
+    padding: 0px;
+    border-radius: 5px;
+    border: 3px dashed #e3e3e3;
+    font-size: 30px;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.activity {
+    margin-bottom: 0 !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid #e3e3e3 !important;
+}
+
+
+.activities-container .activity:last-child {
+    border-bottom-left-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+    border-bottom: none;
+}
+
+.activity .card-header {
+    /*padding: 10px;*/
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+.draggable-mirror {
+    opacity: 0.7;
+}
+
+.card-action-element a {
+    cursor: pointer;
+}
+
+.theme-handle, .activity-handle {
+    cursor: move;
+}
+
+.file-upload {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.list-group-numbered>.list-group-item::before {
+    position: absolute;
+    top: 15px;
+}
+
+.answers {
+    margin-top: 10px;
+}
+
+.answers li {
+    margin-bottom: 5px;
+}
+
+.swal2-container {
+    z-index: 99999 !important;
+}

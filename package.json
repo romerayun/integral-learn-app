@@ -1,0 +1,30 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.2",
+        "axios": "^1.1.2",
+        "laravel-vite-plugin": "^0.8.0",
+        "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "@shopify/draggable": "^1.1.3",
+        "bootstrap-datepicker": "^1.10.0",
+        "bs-stepper": "^1.7.0",
+        "cleave.js": "^1.6.0",
+        "jquery": "^3.6.0",
+        "jquery.repeater": "^1.2.1",
+        "just-validate": "^4.2.0",
+        "just-validate-plugin-date": "^1.2.0",
+        "moment": "^2.29.4",
+        "quill": "^1.3.6",
+        "quill-image-uploader": "^1.3.0",
+        "select2": "^4.0.0",
+        "simple-datatables": "^8.0.0",
+        "suggestions-jquery": "^22.6.0"
+    }
+}
