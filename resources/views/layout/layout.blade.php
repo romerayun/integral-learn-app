@@ -53,6 +53,15 @@
                     </a>
                 </li>
 
+                @role('super-user')
+                <li class="menu-item">
+                    <a href="{{route('roles.index')}}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bxs-low-vision"></i>
+                        <div>Роли пользователей</div>
+                    </a>
+                </li>
+                @endrole
+
                 <li class="menu-item">
                     <a href="{{route('groups.index')}}" class="menu-link">
                         <i class="menu-icon tf-icons bx bxs-group"></i>
@@ -108,7 +117,7 @@
                 </div>
 
                 <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-                    <p class="mb-0">👋🏻 Здравствуйте, <span>Наталья</span></p>
+                    <p class="mb-0">👋🏻 Здравствуйте, <span>{{auth()->user()->name}}</span></p>
                     <ul class="navbar-nav flex-row align-items-center ms-auto">
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
@@ -126,8 +135,10 @@
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <span class="fw-semibold d-block">John Doe</span>
-                                                <small class="text-muted">Admin</small>
+                                                <span class="fw-semibold d-block">{{auth()->user()->surname}} {{auth()->user()->name}}</span>
+                                                @foreach(auth()->user()->roles as $item)
+                                                    <small class="text-muted">{{$item->name}}</small>
+                                                @endforeach
                                             </div>
                                         </div>
                                     </a>
@@ -160,9 +171,9 @@
                                     <div class="dropdown-divider"></div>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="auth-login-basic.html">
+                                    <a class="dropdown-item" href="{{route('logout')}}">
                                         <i class="bx bx-power-off me-2"></i>
-                                        <span class="align-middle">Log Out</span>
+                                        <span class="align-middle">Выйти</span>
                                     </a>
                                 </li>
                             </ul>

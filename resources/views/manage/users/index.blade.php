@@ -7,13 +7,15 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="d-flex mb-4">
-                <a href="{{route('users.create')}}" class="btn btn-success">
-                    <span class="tf-icons bx bx-plus"></span>&nbsp; Добавить
-                </a>
-            </div>
+            @if(auth()->user()->can('add users'))
+                <div class="d-flex mb-4">
+                    <a href="{{route('users.create')}}" class="btn btn-success">
+                        <span class="tf-icons bx bx-plus"></span>&nbsp; Добавить
+                    </a>
+                </div>
+            @endif
 
-
+            @if(auth()->user()->can('all users'))
             <div class="card mb-4">
                 <h5 class="card-header">Список пользователей</h5>
                 <div class="card-body">
@@ -30,7 +32,9 @@
                                     <th>Паспорт</th>
                                     <th>Номер телефона</th>
                                     <th>Учебные группы</th>
-                                    <th class="text-end">Взаимодействие</th>
+                                    @if(auth()->user()->can('show users') || auth()->user()->can('edit users') || auth()->user()->can('delete users'))
+                                        <th class="text-end">Взаимодействие</th>
+                                    @endif
                                 </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -39,9 +43,11 @@
                                     <tr>
                                         <td>{{$key+1}}</td>
                                         <td class="w-px-100">
-                                            <span class="badge bg-{{$item->role->color}} fs-tiny">
-                                                {{$item->role->name}}
+                                            @foreach($item->roles as $role)
+                                            <span class="badge bg-{{$role->color}} fs-tiny">
+                                                {{$role->name}}
                                             </span>
+                                            @endforeach
                                         </td>
                                         <td>
                                             {{$item->getFullName()}}
@@ -66,6 +72,8 @@
                                             </ul>
 
                                         </td>
+                                        @if(auth()->user()->can('show users') || auth()->user()->can('edit users') || auth()->user()->can('delete users'))
+
                                         <td class="text-end">
                                             <div class="text-end">
                                                 <a href="{{route('users.edit', ['user' => $item->id])}}" class="btn btn-sm btn-icon item-edit"><i class="bx bxs-edit"></i></a>
@@ -92,6 +100,7 @@
 
                                             </div>
                                         </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -100,6 +109,7 @@
                     </div>
                 </div>
             </div>
+                @endif
         </div>
     </div>
 

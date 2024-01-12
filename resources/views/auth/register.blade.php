@@ -33,60 +33,114 @@
         <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg p-sm-5 p-4">
             <div class="w-px-400 mx-auto">
                 <!-- Logo -->
-                <div class="app-brand mb-5">
+                <div class="app-brand mb-3">
                     <a href="{{route('login')}}" class="app-brand-link gap-2">
                         <span class="app-brand-text text-uppercase fs-3 text-body fw-bold ">Интеграл</span>
                     </a>
                 </div>
+
+                <div class="mb-3">
+                    @if(session()->has('success'))
+                        <div class="alert alert-success alert-dismissible show fade mt-3">
+                            {!!  session('success') !!}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    @if(session()->has('error'))
+                        <div class="alert alert-danger alert-dismissible show fade mt-3">
+                            {{session('error')}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                </div>
+
                 <!-- /Logo -->
                 <h4 class="mb-2">Обучение начинается здесь 🚀</h4>
                 <p class="mb-4">Введите свои учетные данные и начинайте учиться</p>
 
-                <form id="formAuthentication" class="mb-3 fv-plugins-bootstrap5 fv-plugins-framework" action="{{route('store-user')}}" method="POST" novalidate="novalidate">
-
+                <form action="{{route('store-user')}}" class="mb-3 fv-plugins-bootstrap5 fv-plugins-framework" method="POST">
                     @csrf
-
                     <div class="mb-3 fv-plugins-icon-container">
                         <label for="surname" class="form-label">Фамилия</label>
-                        <input type="text" class="form-control" id="surname" name="surname" placeholder="Введите свою фамилию" autofocus="">
-                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                        <input type="text" class="form-control @if($errors->has('surname')) is-invalid @endif" id="surname" name="surname" placeholder="Введите свою фамилию" autofocus="" value="{{old('surname')}}">
+                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                            @if($errors->has('surname'))
+                                @foreach($errors->get('surname') as $message)
+                                    {{$message}}<br>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
 
                     <div class="mb-3 fv-plugins-icon-container">
                         <label for="name" class="form-label">Имя</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Введите свое имя" autofocus="">
-                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                        <input type="text" class="form-control @if($errors->has('name')) is-invalid @endif" id="name" name="name" placeholder="Введите свое имя" autofocus="" value="{{old('name')}}">
+                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                            @if($errors->has('name'))
+                                @foreach($errors->get('name') as $message)
+                                    {{$message}}<br>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
 
                     <div class="mb-3 fv-plugins-icon-container">
                         <label for="patron" class="form-label">Отчетство</label>
-                        <input type="text" class="form-control" id="patron" name="patron" placeholder="Введите свое отчествоd" autofocus="">
-                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                        <input type="text" class="form-control @if($errors->has('patron')) is-invalid @endif" id="patron" name="patron" placeholder="Введите свое отчество" autofocus="" value="{{old('patron')}}">
+                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                            @if($errors->has('patron'))
+                                @foreach($errors->get('patron') as $message)
+                                    {{$message}}<br>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
 
                     <div class="mb-3 fv-plugins-icon-container">
                         <label for="email" class="form-label">Email</label>
-                        <input type="text" class="form-control" id="email" name="email-username" placeholder="Введите действующую электронную почту" autofocus="">
-                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
-                    <div class="mb-3 form-password-toggle fv-plugins-icon-container">
-                        <div class="d-flex justify-content-between">
-                            <label class="form-label" for="password">Пароль</label>
-
+                        <input type="text" class="form-control @if($errors->has('email')) is-invalid @endif" id="email" name="email" placeholder="Введите действующую электронную почту" autofocus="" value="{{old('email')}}">
+                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                            @if($errors->has('email'))
+                                @foreach($errors->get('email') as $message)
+                                    {{$message}}<br>
+                                @endforeach
+                            @endif
                         </div>
-                        <div class="input-group input-group-merge has-validation">
-                            <input type="password" id="password" class="form-control" name="password" placeholder="············" aria-describedby="password">
+                    </div>
+                    <div class="mb-3 form-password-toggle fv-plugins-icon-container fv-plugins-bootstrap5-row-invalid">
+{{--                        <div class="d-flex justify-content-between">--}}
+                            <label class="form-label" for="password">Пароль</label>
+{{--                        </div>--}}
+                        <div class="input-group input-group-merge">
+                            <input type="password" id="password" class="form-control @if($errors->has('password')) is-invalid @endif" name="password" placeholder="············" aria-describedby="password">
                             <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                        </div><div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                        </div>
+                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                            @if($errors->has('password'))
+                                @foreach($errors->get('password') as $message)
+                                    {{$message}}<br>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
 
                     <div class="mb-3 fv-plugins-icon-container">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms">
+                            <input class="form-check-input @if($errors->has('terms-conditions')) is-invalid @endif" type="checkbox" id="terms-conditions" name="terms-conditions">
                             <label class="form-check-label" for="terms-conditions">
                                Я согласен с
-                                <a href="javascript:void(0);">политикой конфиденциальности</a>
+                                <a href="#" class="@if($errors->has('terms-conditions')) text-danger @endif">политикой конфиденциальности</a>
                             </label>
-                            <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+                            <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                                @if($errors->has('terms-conditions'))
+                                    @foreach($errors->get('terms-conditions') as $message)
+                                        {{$message}}<br>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
                     </div>
 
                     <button class="btn btn-primary d-grid w-100">
