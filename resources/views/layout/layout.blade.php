@@ -46,6 +46,23 @@
                     </a>
                 </li>
 
+
+                <li class="menu-header small text-uppercase">
+                    <span class="menu-header-text">Мое обучение</span>
+                </li>
+
+                <li class="menu-item">
+                    <a href="{{route('learning-program.my')}}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bxs-graduation"></i>
+                        <div data-i18n="Студенты">Мои учебные программы</div>
+                    </a>
+                </li>
+
+
+                <li class="menu-header small text-uppercase">
+                    <span class="menu-header-text">Администрирование</span>
+                </li>
+
                 <li class="menu-item">
                     <a href="{{route('users.index')}}" class="menu-link">
                         <i class="menu-icon tf-icons bx bxs-user"></i>
@@ -82,6 +99,9 @@
                         <div data-i18n="Студенты">Типы активностей</div>
                     </a>
                 </li>
+
+
+
 
 {{--                <li class="menu-item">--}}
 {{--                    <a class="menu-link menu-toggle">--}}
@@ -186,21 +206,22 @@
             <div class="container-xxl mt-3">
                 @if(session()->has('success'))
                     <div class="alert alert-success alert-dismissible show fade mt-3">
-                        {{session('success')}}
+                        {!! session('success') !!}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
 
                 @if(session()->has('error'))
                     <div class="alert alert-danger alert-dismissible show fade mt-3">
-                        {{session('error')}}
+                        {!!  session('error') !!}
+
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
             </div>
 
             <div class="content-wrapper">
-                <div class="container-xxl flex-grow-1 container-p-y">
+                <div class="container-xxl flex-grow-1 container-p-y pt-0">
                     @yield('content')
                 </div>
                 <div class="content-backdrop fade"></div>

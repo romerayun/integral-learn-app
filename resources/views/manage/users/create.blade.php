@@ -3,7 +3,7 @@
 @section('content')
     @parent
 
-    <h4 class="fw-bold py-3 mb-0"><span class="text-muted fw-light">Управление /</span> Пользователи</h4>
+    <h4 class="fw-bold py-3 mb-0"><span class="text-muted fw-light">Управление / <a href="{{route('users.index')}}" class="text-muted">Пользователи</a> / </span> Добавление</h4>
 
     <div class="row">
         <div class="col-md-12">
@@ -15,39 +15,78 @@
 
             <div class="card mb-4">
                 <h5 class="card-header pb-2">Добавление нового пользователя</h5>
-                <p class="text-primary ms-4 me-4 mb-0">Для всех новых пользователей будет установлен пароль - 12345, данный пароль можно будет поменять в личном кабинете</p>
+                <p class="text-primary ms-4 me-4 mb-0">Для всех новых пользователей будет сгенерирован пароль и отправлен на электронную почту, данный пароль можно будет поменять в личном кабинете</p>
                 <div class="card-body">
                     <form action="{{route('users.store')}}" method="POST">
                         @csrf
 
 
-                        <div class="row">
-                            <div class="col-12">
+{{--                        <div class="row">--}}
+{{--                            <div class="col-12">--}}
 {{--                                <div class="d-flex gap-3">--}}
-                                    <div class="form-check">
-                                        <input name="role_id" class="form-check-input" value="1" type="radio" checked>
-                                        <label class="form-check-label" for="role">
-                                            Администратор
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input name="role_id" class="form-check-input" value="2" type="radio">
-                                        <label class="form-check-label" for="role">
-                                            Преподаватель
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input name="role_id" class="form-check-input" value="3" type="radio">
-                                        <label class="form-check-label" for="role">
-                                            Студент
-                                        </label>
-                                    </div>
+{{--                                    <div class="form-check">--}}
+{{--                                        <input name="role_id" class="form-check-input" value="1" type="radio" checked>--}}
+{{--                                        <label class="form-check-label" for="role">--}}
+{{--                                            Администратор--}}
+{{--                                        </label>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="form-check">--}}
+{{--                                        <input name="role_id" class="form-check-input" value="2" type="radio">--}}
+{{--                                        <label class="form-check-label" for="role">--}}
+{{--                                            Преподаватель--}}
+{{--                                        </label>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="form-check">--}}
+{{--                                        <input name="role_id" class="form-check-input" value="3" type="radio">--}}
+{{--                                        <label class="form-check-label" for="role">--}}
+{{--                                            Студент--}}
+{{--                                        </label>--}}
+{{--                                    </div>--}}
 {{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <label for="learning_program" class="form-label">Выберите права для добавляемой роли</label>
+                                <div class="select2-primary">
+                                    <div class="position-relative">
+                                        <select id="role_id" required name="role_id"
+                                                class="select2 form-select select2-hidden-accessible @if($errors->has('role_id')) is-invalid @endif"
+                                                data-minimum-selection-length="1"
+                                                data-placeholder="Выберите роль пользователя">
+                                            @foreach($roles as $item)
+                                                <option value="{{$item->id}}">
+                                                    {{$item->nameRU}}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-text text-danger">
+                                    @if($errors->has('role_id'))
+                                        @foreach($errors->get('role_id') as $message)
+                                            {{$message}}<br>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-6">
+                                <div>
+                                    <label for="email" class="form-label">Электронная почта <sup class="text-danger">*</sup></label>
+                                    <input type="email" class="form-control @if($errors->has('email')) is-invalid @endif" name="email" id="email" placeholder="info@test.ru" value="{{old('email')}}">
+                                    <div class="form-text text-danger" >
+                                        @if($errors->has('email'))
+                                            @foreach($errors->get('email') as $message)
+                                                {{$message}}<br>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
 
-                        <div class="row mt-3">
+                        <div class="row mt-2">
                             <div class="col-md-12 col-lg-4">
                                 <div>
                                     <label for="surname" class="form-label">Фамилия <sup class="text-danger">*</sup></label>

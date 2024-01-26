@@ -42,7 +42,7 @@
                                             <div class="square-color-{{$item->color}}"></div>
                                         </td>
                                         <td>
-                                            {{$item->name}}
+                                            {{$item->nameRU}}
                                         </td>
                                         <td>
 

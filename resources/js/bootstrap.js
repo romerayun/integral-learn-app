@@ -21,6 +21,7 @@ import JustValidate from 'just-validate';
 import JustValidatePluginDate from 'just-validate-plugin-date';
 import ImageUploader from "quill-image-uploader";
 import {DataTable} from 'simple-datatables';
+import ApexCharts from 'apexcharts';
 
 import {
     Draggable,
@@ -42,10 +43,12 @@ window.Sortable = Sortable;
 window.Droppable = Droppable;
 window.Swappable = Swappable;
 window.Plugins = Plugins;
+window.ApexCharts = ApexCharts;
 
 
 
 Quill.register("modules/imageUploader", ImageUploader);
+
 // $(".select2").select2();
 
 if ($("#dataTable").length) {

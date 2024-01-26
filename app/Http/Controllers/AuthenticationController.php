@@ -46,6 +46,12 @@ class AuthenticationController extends Controller
                 return redirect("login")->with('error', 'К сожалению, Ваша электронная почта не подтверждена 🥺 <br><br>' . '<a href="'. route('registration.repeatEmail').'">Отправить ссылку для подтверждения</a>');
             }
 
+            activity()
+                ->causedBy(\auth()->user())
+                ->performedOn(\auth()->user())
+                ->event('default')
+                ->log('Вход пользователя на сайт');
+
             return redirect()->route('main');
         }
 

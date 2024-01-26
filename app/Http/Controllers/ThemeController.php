@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LearningProgram;
 use App\Models\LearningProgramTheme;
 use App\Models\Theme;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -175,8 +176,6 @@ class ThemeController extends Controller
                         </div>
                     </div>';
             }
-
-
 
 
             return response()->json([

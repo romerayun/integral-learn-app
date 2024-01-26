@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\ActivityTypeController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\ExcelImportController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LearningProgrammController;
 use App\Http\Controllers\QuizController;
@@ -50,16 +51,22 @@ Route::middleware(['auth'])->group(function () {
         return view('main');
     })->name('main');
 
+    Route::get('/my-learning-programs', [LearningProgrammController::class, 'showPersonalLP'])->name('learning-program.my');
+    Route::get('/my-learning-programs/{learning_program}', [LearningProgrammController::class, 'showDetailsLP'])->name('learning-program.showDetails');
 
-    Route::prefix('manage')->group(function () {
+
+    Route::prefix('manage')->middleware('activityLog')->group(function () {
 //        Route::resource('/users', UserAdminController::class);
         Route::get('/users', [UserAdminController::class, 'index'])->name('users.index')->middleware('can:all users');
         Route::get('/users/create', [UserAdminController::class, 'create'])->name('users.create')->middleware('can:add users');
+        Route::get('/users/import', [ExcelImportController::class, 'importPage'])->name('users.import');
+        Route::post('/users/import', [ExcelImportController::class, 'import'])->name('users.importPost');
         Route::post('/users', [UserAdminController::class, 'store'])->name('users.store')->middleware('can:add users');
         Route::get('/users/{user}', [UserAdminController::class, 'show'])->name('users.show')->middleware('can:show users');
         Route::get('/users/{user}/edit', [UserAdminController::class, 'edit'])->name('users.edit')->middleware('can:edit users');
         Route::put('/users/{user}', [UserAdminController::class, 'update'])->name('users.update')->middleware('can:edit users');
         Route::delete('/users/{user}', [UserAdminController::class, 'destroy'])->name('users.destroy')->middleware('can:delete users');
+        Route::post('/users/repeat/{user}', [UserAdminController::class, 'repeatPassEmail'])->name('users.repeatPE');
 
 
 

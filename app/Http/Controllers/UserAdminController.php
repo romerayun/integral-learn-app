@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUser;
+use App\Mail\RegistrationMail;
+use App\Models\Role;
 use App\Models\User;
+use App\Models\UserVerify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use LaravelLang\Publisher\Concerns\Has;
+use Spatie\Activitylog\Models\Activity;
 
 class UserAdminController extends Controller
 {
@@ -24,7 +31,8 @@ class UserAdminController extends Controller
      */
     public function create()
     {
-        return view('manage.users.create');
+        $roles = Role::all();
+        return view('manage.users.create', compact('roles'));
     }
 
     /**
@@ -32,16 +40,33 @@ class UserAdminController extends Controller
      */
     public function store(StoreUser $request)
     {
+        $role = Role::findOrFail($request->role_id);
 
-//        dd($request);
         DB::beginTransaction();
         try {
 
+            $password = Str::random(8);
+            $token = Str::random(64);
             $request->merge([
-                'password' => Hash::make('12345')
+                'password' => Hash::make($password),
+                ''
             ]);
 
-            User::create($request->all());
+            $user = User::create($request->all());
+            $user->assignRole($role->name);
+
+            UserVerify::create([
+                'user_id' => $user->id,
+                'token' => $token
+            ]);
+
+            $mailContent = [
+                'token' => $token,
+                'user' => $user,
+                'password' => $password,
+            ];
+            Mail::to($user->email)->send(new RegistrationMail($mailContent));
+
             DB::commit();
             $request->session()->flash('success', 'Данные успешно добавлены 👍');
             return back();
@@ -60,7 +85,8 @@ class UserAdminController extends Controller
         $user = User::firstWhere('id', $id);
         if (!$user) abort(404);
 
-        return view('manage.users.show', compact('user'));
+        $activities = Activity::where('causer_id', $user->id)->orderBy('created_at', 'desc')->limit(5)->get(); //returns the last logged activity
+        return view('manage.users.show', compact('user', 'activities'));
     }
 
     /**
@@ -88,5 +114,39 @@ class UserAdminController extends Controller
         if (!$user) abort(404);
         $user->delete();
         return redirect()->back()->with('success', 'Данные успешно удалены 👍');
+    }
+
+    public function repeatPassEmail(Request $request, $id) {
+
+        $user = User::firstWhere('id', $id);
+        if (!$user) return redirect()->back()->with('error', 'При повторной отправке данных произошла ошибка');
+
+        $userToken = UserVerify::firstWhere('user_id', $user->id);
+        if (!$userToken) {
+            $token = Str::random(64);
+
+            UserVerify::create([
+                'user_id' => $user->id,
+                'token' => $token
+            ]);
+        } else {
+            $token = $userToken->token;
+        }
+
+        $password = Str::random(8);
+
+
+        $mailContent = [
+            'token' => $token,
+            'user' => $user,
+            'password' => $password,
+        ];
+
+        $user->password = Hash::make($password);
+        $user->save();
+
+        Mail::to($user->email)->send(new RegistrationMail($mailContent));
+
+        return redirect()->back()->with('success', 'На электронную почту <b>' . $user->email . '</b> отправлено письмо, содержащее новый пароль и ссылку для подтверждения регистрации');
     }
 }

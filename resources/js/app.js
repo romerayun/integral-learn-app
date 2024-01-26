@@ -13,8 +13,7 @@ import "../assets/js/config.js";
 
 import "../assets/vendor/libs/select2/select2.min.css";
 
-
-
+import 'apexcharts/dist/apexcharts.css';
 
 import "../assets/vendor/libs/sweetalert2/sweetalert2.min.css";
 import "../assets/vendor/libs/sweetalert2/sweetalert2.all.js";

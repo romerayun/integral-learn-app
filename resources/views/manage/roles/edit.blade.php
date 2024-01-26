@@ -57,7 +57,7 @@
                                     <label for="name" class="form-label">Наименование роли <sup
                                             class="text-danger">*</sup></label>
                                     <input type="text" class="form-control @if($errors->has('name')) is-invalid @endif" required
-                                           name="name" id="name" placeholder="Администратор" value="{{$role->name}}">
+                                           name="name" id="name" placeholder="Администратор" value="{{$role->nameRU}}">
                                     <div class="form-text text-danger">
                                         @if($errors->has('name'))
                                             @foreach($errors->get('name') as $message)

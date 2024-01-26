@@ -107,4 +107,17 @@ class LearningProgrammController extends Controller
         $lp->delete();
         return redirect()->back()->with('success', 'Данные успешно удалены 👍');
     }
+
+    public function showPersonalLP() {
+        return view('lp.index');
+    }
+
+    public function showDetailsLP($id) {
+
+        $lp = LearningProgram::firstWhere('id', $id);
+
+        if (!$lp) abort(404);
+
+        return view('lp.detail', compact('lp'));
+    }
 }

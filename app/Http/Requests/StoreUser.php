@@ -24,6 +24,7 @@ class StoreUser extends FormRequest
         return [
             'surname' => 'required',
             'name' => 'required',
+            'email' => 'required|email|unique:App\Models\User,email',
             'patron' => 'required',
             'phone' => 'required',
             'series_passport' => 'required',

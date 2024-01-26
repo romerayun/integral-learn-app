@@ -28,7 +28,10 @@
                                         data-placeholder="Выберите студентов">
                                     @foreach($users as $item)
                                         <option value="{{$item->id}}">
-                                            {{$item->getFullName()}} (Паспортные данные: {{$item->getPassport()}}) - {{$item->role->name}}
+                                            {{$item->getFullName()}} (Паспортные данные: {!! $item->getPassport() !!}) -
+                                            @foreach($item->roles as $role)
+                                                {{$role->nameRU}}
+                                            @endforeach
                                         </option>
                                     @endforeach
                                 </select>

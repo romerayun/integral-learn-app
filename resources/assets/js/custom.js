@@ -1,10 +1,28 @@
 import 'jquery.repeater';
 import 'bootstrap-datepicker/dist/locales/bootstrap-datepicker.ru.min';
 import $ from "jquery";
+import {Dropzone} from "dropzone";
 
 $(document).ready(function () {
 
+    function showToast(color, title, text) {
+        let toastElList = [].slice.call(document.querySelectorAll('.toast'))
 
+        let bg = 'bg-'+color;
+
+        $('.toast-title').html(title);
+        $('.toast').addClass(bg);
+        $('.toast-body').html(text);
+
+        let toastList = toastElList.map(function(toastEl) {
+            return new bootstrap.Toast(toastEl, {'delay': 3500})
+        })
+        toastList.forEach(toast => toast.show());
+
+        setTimeout(function () {
+            $('.toast').removeClass(bg);
+        }, 4000);
+    }
 
     if ($('.select2').length) {
         $(".select2").select2({
@@ -61,9 +79,10 @@ $(document).ready(function () {
                                     resolve(result.fullUrl);
                                 })
                                 .catch((error) => {
-                                    showToast('error', 'Ошибка', "При загрузке изображения произошла ошибка");
+                                    console.log(error);
+                                    showToast('danger', 'Ошибка', "При загрузке изображения произошла ошибка");
                                     reject("Upload failed");
-                                    // console.error("Error:", error.message);
+                                    console.error("Error:", error.message);
                                 });
                         });
                     }
@@ -481,7 +500,7 @@ $(document).ready(function () {
         let label	 = this.nextElementSibling,
             labelVal = this.innerHTML;
 
-        console.log(label, this);
+        // console.log(label, this);
 
         let fileType = this.files[0]["type"];
         let validImageTypes = [ "image/jpeg", "image/png"];
@@ -503,33 +522,121 @@ $(document).ready(function () {
         }
     });
 
-    // let inputs = document.querySelectorAll( '.file-upload' );
-    // Array.prototype.forEach.call( inputs, function( input )
-    // {
-    //     input.addEventListener( 'change', function( e )
-    //     {
-    //         let label	 = this.nextElementSibling,
-    //             labelVal = this.innerHTML;
-    //
-    //         let fileType = this.files[0]["type"];
-    //         let validImageTypes = [ "image/jpeg", "image/png"];
-    //         if ($.inArray(fileType, validImageTypes) < 0) {
-    //             showToast('danger', 'Ошибка при загрузке файла', "Загрузите изображение в формате  .jpg, .png")
-    //         } else {
-    //             let fileName = '';
-    //             if( this.files && this.files.length > 1 )
-    //                 fileName = ( this.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', this.files.length )
-    //             else
-    //                 fileName = e.target.value.split( '\\' ).pop();
-    //
-    //
-    //             if( fileName )
-    //                 // label.querySelector( 'span' ).innerHTML = fileName;
-    //                 label.style.color = '#71dd37';
-    //             else
-    //                 label.innerHTML = labelVal;
-    //         }
-    //     });
-    // });
 
+
+    if ($("#chart").length) {
+        function generateData(month, year) {
+            let count = new Date(year, month, 0).getDate();
+            let res;
+
+
+            return res;
+        }
+
+        let months = [
+            'Январь',
+            'Февраль',
+            'Март',
+            'Апрель',
+            'Март',
+            'Июнь',
+            'Июль',
+            'Август',
+            'Сентябрь',
+            'Октябрь',
+            'Ноябрь',
+            'Декабрь',
+        ]
+
+
+        var options = {
+            chart: {
+                height: 200,
+                type: "heatmap",
+                toolbar: {
+                    show: true,
+                    offsetX: 0,
+                    offsetY: 0,
+                    tools: {
+                        download: true,
+                        selection: false,
+                        zoom: false,
+                        zoomin: false,
+                        zoomout: false,
+                        pan: false,
+                        reset: false,
+                    },
+                    export: {
+                        csv: {
+                            filename: undefined,
+                            columnDelimiter: ',',
+                            headerCategory: '#',
+                            headerValue: 'value',
+                            dateFormatter(timestamp) {
+                                return new Date(timestamp).toDateString()
+                            }
+                        },
+                        svg: {
+                            filename: undefined,
+                        },
+                        png: {
+                            filename: undefined,
+                        }
+                    },
+                },
+            },
+            colors: [
+                "#696cff",
+            ],
+            plotOptions: {
+                heatmap: {
+                    shadeIntensity: 0.5,
+
+                    colorScale: {
+                        ranges: [{
+                            from: 0,
+                            to: 20,
+                            name: 'low',
+                            color: '#acb0ff'
+                        }]
+                    }
+                },
+            },
+            dataLabels: {
+                enabled: false
+            },
+            legend: {
+                show: false
+            },
+            series: [],
+            noData: {
+                text: 'Загружаем данные...'
+            },
+            stroke: {
+                width: 1
+            },
+            tooltip: {
+                custom: function ({series, seriesIndex, dataPointIndex, w}) {
+                    if (w.globals.seriesNames[seriesIndex] !== "") {
+                        return series[seriesIndex][dataPointIndex] + " действий на " + (dataPointIndex + 1) + " " + (w.globals.seriesNames[seriesIndex]).substr(0, 3);
+                    } else {
+                        return "";
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+
+        chart.render();
+
+
+        var url = '/api/get-activity-log/?year=' + 2024;
+
+        $.getJSON(url, function (response) {
+
+            chart.updateSeries(response)
+
+        });
+    }
 });

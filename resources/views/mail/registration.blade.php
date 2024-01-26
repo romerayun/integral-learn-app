@@ -208,14 +208,15 @@
                                     <table border="0" cellpadding="0" cellspacing="0" class="heading_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                                         <tr>
                                             <td class="pad" style="padding-top:12px;text-align:center;width:100%;">
-                                                <h1 style="margin: 0; color: #292929; direction: ltr; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 32px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 38.4px;"><span class="tinyMce-placeholder">Здравствуйте, {{ $content['user']->surname }} {{$content['user']->name}} {{$content['user']->patron}} </span></h1>
+                                                <h1 style="margin: 0; color: #292929; direction: ltr; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 32px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 38.4px;"><span class="tinyMce-placeholder">Здравствуйте, {{$content['user']->name}} {{$content['user']->patron}} </span></h1>
                                             </td>
                                         </tr>
                                     </table>
-                                    <table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+                                    <table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word; margin-top: 30px" width="100%">
                                         <tr>
                                             <td class="pad" style="padding-bottom:10px;padding-top:10px;">
                                                 <div style="color:#101112;direction:ltr;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:19.2px;">
+                                                    <p style="margin: 0; margin-bottom: 20px"><b>Ваш пароль: </b>{{$content['password']}}</p>
                                                     <p style="margin: 0;">Вы были успешно зарегистрированы на нашем сайте. Чтобы получить доступ к сайту, необходимо подтвердить адрес электронной почты.</p>
                                                 </div>
                                             </td>

@@ -192,3 +192,14 @@ body .square-color-warning {
 .swal2-container {
     z-index: 99999 !important;
 }
+
+.lp .card {
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+}
+
+.lp .card:hover {
+    border-color: rgba(105, 108, 255, 0.3);
+    box-shadow: rgba(105, 108, 255, 0.35) 0px 5px 15px 0px;
+}

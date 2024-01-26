@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
+//use Spatie\Permission\Models\Permission;
+//use Spatie\Permission\Models\Role;
+use App\Models\Permission;
+use App\Models\Role;
+
 
 class RoleController extends Controller
 {
@@ -40,7 +44,7 @@ class RoleController extends Controller
     {
         $request->validate([
             'color' => 'required',
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|unique:roles,name',
             'permissions' => 'required',
             'permissions.*' => 'required|exists:permissions,id',
         ]);
@@ -48,7 +52,8 @@ class RoleController extends Controller
         DB::beginTransaction();
         try {
             $newRole = Role::create([
-                'name' => $request->name,
+                'name' => Str::slug($request->name),
+                'nameRU' => $request->name,
                 'color' => $request->color
             ]);
 
@@ -95,7 +100,7 @@ class RoleController extends Controller
     {
         $request->validate([
             'color' => 'required',
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|unique:roles,name',
             'permissions' => 'required',
             'permissions.*' => 'required|exists:permissions,id',
         ]);
@@ -106,7 +111,8 @@ class RoleController extends Controller
         try {
 
             $role->update([
-                'name' => $request->name,
+                'name' => Str::slug($request->name),
+                'nameRU' => $request->name,
                 'color' => $request->color
             ]);
 
@@ -128,6 +134,9 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $role = Role::firstWhere('id', $id);
+        if (!$role) return redirect()->back()->with('danger', 'При удалении данных произошла ошибка 😢');
+        $role->delete();
+        return redirect()->back()->with('success', 'Данные успешно удалены 👍');
     }
 }

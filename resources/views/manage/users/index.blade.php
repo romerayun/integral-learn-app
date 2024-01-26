@@ -8,9 +8,12 @@
     <div class="row">
         <div class="col-md-12">
             @if(auth()->user()->can('add users'))
-                <div class="d-flex mb-4">
+                <div class="d-flex mb-4 gap-2">
                     <a href="{{route('users.create')}}" class="btn btn-success">
                         <span class="tf-icons bx bx-plus"></span>&nbsp; Добавить
+                    </a>
+                    <a href="{{route('users.import')}}" class="btn btn-secondary">
+                        <span class="tf-icons bx bx-upload"></span>&nbsp; Импорт данных
                     </a>
                 </div>
             @endif
@@ -40,21 +43,29 @@
                                 <tbody class="table-border-bottom-0">
 
                                 @foreach($users as $key => $item)
-                                    <tr>
+                                    <tr >
                                         <td>{{$key+1}}</td>
                                         <td class="w-px-100">
                                             @foreach($item->roles as $role)
                                             <span class="badge bg-{{$role->color}} fs-tiny">
-                                                {{$role->name}}
+                                                {{$role->nameRU}}
                                             </span>
                                             @endforeach
+
+                                            <span class="badge fs-tiny @if($item->is_email_verified) bg-success @else bg-danger @endif">
+                                                @if($item->is_email_verified) Подтвержден @else Не подтвержден @endif
+                                            </span>
                                         </td>
                                         <td>
                                             {{$item->getFullName()}}
                                         </td>
-                                        <td>{{$item->getPassport()}}</td>
+                                        <td>{!! $item->getPassport() !!}</td>
                                         <td>
-                                            <a href="tel:{{$item->phone}}">{{ $item->phone }}</a>
+                                            @if(empty($item->phone))
+                                                <span class="text-danger">Не заполнено</span>
+                                            @else
+                                                <a href="tel:{{$item->phone}}">{{ $item->phone }}</a>
+                                            @endif
                                         </td>
                                         <td>
                                             <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
@@ -65,7 +76,7 @@
                                                         </li>
                                                     @endforeach
                                                 @else
-                                                    <span class="text-danger">Пользователь не прикреплен ни к одной учебной группе</span>
+                                                    <span class="text-danger">Не прикреплен</span>
                                                 @endif
 
 
@@ -84,6 +95,14 @@
                                                     <ul class="dropdown-menu dropdown-menu-end m-0">
                                                         <li>
                                                             <a href="{{route('users.show', ['user' => $item->id])}}" class="dropdown-item"><span class="tf-icons bx bx-show"></span> Открыть</a>
+                                                        </li>
+                                                        <li>
+                                                            <form action="{{route('users.repeatPE', ['user' => $item->id])}}" method="POST">
+                                                                @csrf
+                                                                <button type="submit" class="dropdown-item">
+                                                                    <span class="tf-icons bx bx-refresh"></span> Повторная отправка<br>письма подтверждения
+                                                                </button>
+                                                            </form>
                                                         </li>
                                                         <li>
                                                             <form action="{{route('users.destroy', ['user' => $item->id])}}" method="POST">
