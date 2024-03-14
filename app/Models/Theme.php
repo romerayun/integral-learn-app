@@ -31,5 +31,8 @@ class Theme extends Model
         return $this->belongsToMany(Activity::class, 'activity_themes')->orderByPivot('order', 'asc');
     }
 
+    public function complete() {
+        return $this->hasMany(CompleteActivity::class, 'theme_id', 'id');
+    }
 
 }

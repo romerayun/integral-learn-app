@@ -17,7 +17,7 @@
             <div class="card mb-4">
                 <h5 class="card-header pb-2">Добавление новой активности</h5>
                 <div class="card-body">
-                    <form action="{{route('activity.store')}}" method="POST" class="quill-form" enctype="multipart/form-data">
+                    <form action="{{route('activity.store')}}" method="POST" id="form-editor" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="url" value="{{$url ?? old('url') ?? url()->previous()}}">
                         @if(isset($idTheme))
@@ -97,14 +97,16 @@
                         <div class="row mt-2">
                             <div class="col">
                                 <label for="content" class="form-label">Контент активности</label>
-                                <div class="quill"></div>
-                                <input type="hidden" name="content" id="quill-html">
+                                <textarea name="content" id="editor-html" class="d-none"></textarea>
+                                <div class="code-html tui-doc-contents">
+                                    <div id="editor"></div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="row mt-2">
                             <div class="col">
-                                <button type="submit" class="btn btn-success">Сохранить</button>
+                                <button type="submit" class="btn btn-success" id="save">Сохранить</button>
                             </div>
                         </div>
                     </form>

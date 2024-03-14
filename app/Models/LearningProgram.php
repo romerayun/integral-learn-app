@@ -33,4 +33,8 @@ class LearningProgram extends Model
     public function themes() : BelongsToMany {
         return $this->belongsToMany(Theme::class, 'learning_program_themes')->orderByPivot('order', 'asc');
     }
+
+    public function complete() {
+        return $this->hasMany(CompleteActivity::class, 'learning_program_id', 'id');
+    }
 }

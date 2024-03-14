@@ -33,4 +33,5 @@ Route::group(['middleware' => ['web']], function () {
     Route::delete('/destroy-question-file', [\App\Http\Controllers\QuizController::class, 'destroyFile']);
     Route::delete('/destroy-question', [\App\Http\Controllers\QuizController::class, 'destroyQuestion']);
     Route::get('/get-activity-log', [\App\Http\Controllers\ApiController::class, 'getActivityByDate']);
+    Route::post('/upload-editor-image', [\App\Http\Controllers\ApiController::class, 'uploadEditorImage']);
 });

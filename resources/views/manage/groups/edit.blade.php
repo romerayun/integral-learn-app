@@ -3,7 +3,7 @@
 @section('content')
     @parent
 
-    <h4 class="fw-bold py-3 mb-0"><span class="text-muted fw-light">Управление / <a href="{{route('groups.index')}}" class="text-muted">Группы</a> / </span> Добавление</h4>
+    <h4 class="fw-bold py-3 mb-0"><span class="text-muted fw-light">Управление / <a href="{{route('groups.index')}}" class="text-muted">Группы</a> / </span> Редактирование</h4>
 
     <div class="row">
         <div class="col-md-12">
@@ -14,12 +14,12 @@
             </div>
 
             <div class="card mb-4">
-                <h5 class="card-header pb-2">Добавление новой группы</h5>
-                <p class="text-primary ms-4 me-4 mb-0">Каждую группу можно подписать на несколько учебных программ</p>
+                <h5 class="card-header pb-2">Редактирование группы &laquo;{{$group->name}}&raquo;</h5>
+                <p class="text-primary ms-4 me-4 mb-0">Группу можно подписать на несколько учебных программ</p>
                 <div class="card-body">
-                    <form action="{{route('groups.store')}}" method="POST">
+                    <form action="{{route('groups.update', ['group' => $group->id])}}" method="POST">
                         @csrf
-
+                        @method('PUT')
 
                         <div class="row">
                             <div class="col-md-12 col-lg-12">
@@ -27,7 +27,7 @@
                                     <label for="name" class="form-label">Наименование учебной группы <sup
                                             class="text-danger">*</sup></label>
                                     <input type="text" class="form-control @if($errors->has('name')) is-invalid @endif" required
-                                           name="name" id="name" placeholder="Б-23-1" value="{{old('name')}}">
+                                           name="name" id="name" placeholder="Б-23-1" value="{{$group->name}}">
                                     <div class="form-text text-danger">
                                         @if($errors->has('name'))
                                             @foreach($errors->get('name') as $message)
@@ -47,7 +47,7 @@
                                     <label for="start_date" class="form-label">Начало обучения <sup class="text-danger">*</sup></label>
                                     <input type="text" required placeholder="ГГГГ-ММ-ДД"
                                            class="form-control bs-datepicker-format @if($errors->has('start_date')) is-invalid @endif"
-                                           name="start_date" value="{{old('start_date', date("Y-m-d"))}}">
+                                           name="start_date" value="{{$group->start_date, date("Y-m-d")}}">
                                     <div class="form-text text-danger">
                                         @if($errors->has('start_date'))
                                             @foreach($errors->get('start_date') as $message)
@@ -63,7 +63,7 @@
                                             class="text-danger">*</sup></label>
                                     <input type="text" required placeholder="ГГГГ-ММ-ДД"
                                            class="form-control bs-datepicker-format @if($errors->has('end_date')) is-invalid @endif"
-                                           name="end_date" value="{{old('end_date', date("Y-m-d"))}}">
+                                           name="end_date" value="{{$group->end_date, date("Y-m-d")}}">
                                     <div class="form-text text-danger">
                                         @if($errors->has('end_date'))
                                             @foreach($errors->get('end_date') as $message)
@@ -86,7 +86,7 @@
                                             data-minimum-selection-length="1"
                                             data-placeholder="Выберите учебные программы">
                                         @foreach($learningPrograms as $item)
-                                            <option value="{{$item->id}}">
+                                            <option value="{{$item->id}}" @if(array_key_exists($item->id, $idsLP)) selected @endif>
                                                 {{$item->name}}
                                             </option>
                                         @endforeach

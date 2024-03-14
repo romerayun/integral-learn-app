@@ -38,4 +38,8 @@ class Activity extends Model
     public function questions() {
         return $this->hasMany(Question::class);
     }
+
+    public function complete() {
+        return $this->hasMany(CompleteActivity::class, 'activity_id', 'id');
+    }
 }

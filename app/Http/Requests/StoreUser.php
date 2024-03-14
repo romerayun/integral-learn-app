@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Livewire\Attributes\Rule;
 
 class StoreUser extends FormRequest
 {
@@ -21,10 +22,15 @@ class StoreUser extends FormRequest
      */
     public function rules(): array
     {
+//        dd($this);
         return [
             'surname' => 'required',
             'name' => 'required',
-            'email' => 'required|email|unique:App\Models\User,email',
+            'email' => [
+                'required',
+                'email',
+                \Illuminate\Validation\Rule::unique('users','email')->ignore($this->user_id, 'id')
+                ],
             'patron' => 'required',
             'phone' => 'required',
             'series_passport' => 'required',

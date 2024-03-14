@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Group::class, 'group_users')->withPivot('id');
     }
 
+    public function complete() {
+        return $this->hasMany(CompleteActivity::class, 'user_id', 'id');
+    }
+
+
     public function getFullName() {
         return $this->surname . " " . $this->name . " " . $this->patron;
     }

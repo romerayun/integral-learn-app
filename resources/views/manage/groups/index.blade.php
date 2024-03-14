@@ -69,7 +69,7 @@
 
 
 
-                                                <a href="{{route('learning-programs.edit', ['learning_program' => $item->id])}}" class="btn btn-sm btn-icon item-edit"><i class="bx bxs-edit"></i></a>
+                                                <a href="{{route('groups.edit', ['group' => $item->id])}}" class="btn btn-sm btn-icon item-edit"><i class="bx bxs-edit"></i></a>
 
                                                 <div class="d-inline-block">
                                                     <a  class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">

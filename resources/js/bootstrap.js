@@ -13,7 +13,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 import $ from 'jquery';
 import select2 from "select2";
 import 'bootstrap-datepicker';
-import Quill from "quill";
 import 'suggestions-jquery';
 import Stepper from "bs-stepper";
 import Cleave from "cleave.js";
@@ -22,7 +21,6 @@ import JustValidatePluginDate from 'just-validate-plugin-date';
 import ImageUploader from "quill-image-uploader";
 import {DataTable} from 'simple-datatables';
 import ApexCharts from 'apexcharts';
-
 import {
     Draggable,
     Sortable,
@@ -30,11 +28,11 @@ import {
     Swappable,
     Plugins
 } from '@shopify/draggable';
-
+// import Editor from '@toast-ui/editor';
 
 window.$ = window.jQuery = $;
 window.Stepper = Stepper;
-window.Quill = Quill;
+// window.Quill = Quill;
 window.Cleave = Cleave;
 window.JustValidate = JustValidate;
 window.JustValidatePluginDate = JustValidatePluginDate;
@@ -46,8 +44,7 @@ window.Plugins = Plugins;
 window.ApexCharts = ApexCharts;
 
 
-
-Quill.register("modules/imageUploader", ImageUploader);
+// Quill.register("modules/imageUploader", ImageUploader);
 
 // $(".select2").select2();
 

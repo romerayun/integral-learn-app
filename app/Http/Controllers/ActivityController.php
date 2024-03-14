@@ -115,7 +115,7 @@ class ActivityController extends Controller
             return redirect()->back()->with('success', 'Данные успешно обновлены 👍')->withInput($request->all());
         } catch (\Exception $exception) {
             DB::rollback();
-            $request->session()->flash('error', 'При добавлении данных произошла ошибка 😢');
+            $request->session()->flash('error', 'При добавлении данных произошла ошибка 😢' . $exception);
             return back()->withInput($request->all());
         }
 

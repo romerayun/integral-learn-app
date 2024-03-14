@@ -53,7 +53,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/my-learning-programs', [LearningProgrammController::class, 'showPersonalLP'])->name('learning-program.my');
     Route::get('/my-learning-programs/{learning_program}', [LearningProgrammController::class, 'showDetailsLP'])->name('learning-program.showDetails');
+    Route::get('/my-learning-programs/{learning_program}/{theme}/{activity}', [LearningProgrammController::class, 'showActivity'])->name('learning-program.showActivity');
 
+
+    Route::post('/my-learning-programs/{learning_program}/{theme_id}/{activity_id}', [LearningProgrammController::class, 'completeActivity'])->name('learning_program.complete');
 
     Route::prefix('manage')->middleware('activityLog')->group(function () {
 //        Route::resource('/users', UserAdminController::class);

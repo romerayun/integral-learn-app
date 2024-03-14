@@ -15,7 +15,7 @@
 
             <div class="card mb-4">
                 <h5 class="card-header pb-2">Импорт пользователей</h5>
-                <p class="text-primary ms-4 me-4 mb-0">Для импорта данных необходимо <a href="#" class="fw-bold text-decoration-underline">скачать шаблон</a>, заполнить файл необходимыми данными и загрузить на сайт</p>
+                <p class="text-primary ms-4 me-4 mb-0">Для импорта данных необходимо <a href="{{asset('import_users.xlsx')}}" class="fw-bold text-decoration-underline">скачать шаблон</a>, заполнить файл необходимыми данными и загрузить на сайт</p>
                 <div class="card-body">
                     <form action="{{route('users.importPost')}}" method="POST" enctype="multipart/form-data">
                         @csrf

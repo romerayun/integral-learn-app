@@ -184,7 +184,7 @@
                                         <tr>
                                             <td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
                                                 <div align="center" class="alignment" style="line-height:10px">
-                                                    <div style="max-width: 340px;"><img alt="Email illustration" src="{{$message->embed(Vite::asset('resources/assets/img/mail/registration.png'))}}" style="display: block; height: auto; border: 0; width: 100%;" title="Email illustration" width="340"/></div>
+                                                    <div style="max-width: 340px;"><img alt="Email illustration" src="{{$message->embed(public_path() . '/build/assets/registration-11a622b1.png')}}" style="display: block; height: auto; border: 0; width: 100%;" title="Email illustration" width="340"/></div>
                                                 </div>
                                             </td>
                                         </tr>

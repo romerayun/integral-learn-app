@@ -81,6 +81,32 @@
 
         }
     }
+
+    if (!function_exists('checkCompleteActivity')) {
+        function checkCompleteActivity($lp, $theme, $activity) {
+            return \App\Models\CompleteActivity::
+                where('learning_program_id', $lp)->
+                where('theme_id', $theme)->
+                where('activity_id', $activity)->
+                where('user_id', auth()->user()->id)->count();
+        }
+    }
+
+    if (!function_exists('checkCompleteAllTheme')) {
+        function checkCompleteAllTheme($lp, $theme) {
+
+            $countActivities = \App\Models\Theme::findOrFail($theme)->activities->count();
+            $countCompleteActivities = \App\Models\CompleteActivity::
+                                        where('learning_program_id', $lp)->
+                                        where('theme_id', $theme)->
+                                        where('user_id', auth()->user()->id)->count();
+
+
+            if ($countActivities == $countCompleteActivities) return ['result' => true, 'count' => $countCompleteActivities];
+            else return ['result' => false, 'count' => $countCompleteActivities];
+
+        }
+    }
 }
 
 

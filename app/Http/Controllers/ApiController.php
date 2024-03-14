@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Spatie\Activitylog\Models\Activity;
+use Intervention\Image\Facades\Image;
+
 
 class ApiController extends Controller
 {
@@ -75,5 +77,30 @@ class ApiController extends Controller
         }
 
         return json_encode($res);
+    }
+
+    public function uploadEditorImage(Request $request) {
+
+//        $file = Input::file('attachment');
+        dd($request->files);
+        if ($request->files->count()) {
+            foreach ($request->files as $file) {
+                $fileName = time().'_'.$file[0]->getClientOriginalName();
+                echo $fileName;
+                $filePath = $request->file('files')[0]->storeAs('learning_program', $fileName, 'public');
+            }
+        } else {
+            return false;
+        }
+
+
+
+//        if ($request[0]) {
+
+            return $filePath;
+
+//        } else {
+//            return false;
+//        }
     }
 }

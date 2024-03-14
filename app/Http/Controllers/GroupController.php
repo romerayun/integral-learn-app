@@ -68,7 +68,7 @@ class GroupController extends Controller
      */
     public function show(string $id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -76,7 +76,18 @@ class GroupController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $group = Group::firstWhere('id', $id);
+        if (!$group) abort(404);
+
+        $idsLP = [];
+        foreach ($group->learningPrograms as $lp) {
+            $idsLP[$lp->id] = $lp->id;
+        }
+
+
+        $learningPrograms = LearningProgram::all();
+
+        return view('manage.groups.edit', compact('learningPrograms', 'group', 'idsLP'));
     }
 
     /**
@@ -84,7 +95,46 @@ class GroupController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        $group = Group::firstWhere('id', $id);
+        if (!$group) abort(404);
+
+        DB::beginTransaction();
+
+        try {
+            $gLP = GroupLearningProgram::where('group_id', $id);
+            $group->update($request->all());
+
+            if ($gLP->count()) {
+                foreach ($gLP->get() as $item) {
+                    $item->delete();
+                }
+            }
+
+
+
+            if (isset($request->learning_program) && count($request->learning_program)) {
+                foreach ($request->learning_program as $item) {
+
+                    GroupLearningProgram::create(
+                        array(
+                            'group_id' => $group->id,
+                            'learning_program_id' => $item
+                        )
+                    );
+                }
+            }
+
+            DB::commit();
+            $request->session()->flash('success', 'Данные успешно обновлены 👍');
+            return back();
+
+        } catch (\Exception $exception) {
+            DB::rollback();
+            $request->session()->flash('error', 'При обвновлении данных произошла ошибка 😢' . $exception);
+            return back();
+        }
+
     }
 
     /**

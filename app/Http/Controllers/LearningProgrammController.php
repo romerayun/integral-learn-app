@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
+use App\Models\CompleteActivity;
 use App\Models\LearningProgram;
 use App\Models\LearningProgramTheme;
 use App\Models\Theme;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -34,8 +37,6 @@ class LearningProgrammController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request);
-
         DB::beginTransaction();
         try {
 
@@ -78,7 +79,10 @@ class LearningProgrammController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $lp = LearningProgram::firstWhere('id', $id);
+        if (!$lp) abort(404);
+
+        return view('manage.learning-programs.edit', compact('lp'));
     }
 
     /**
@@ -86,7 +90,34 @@ class LearningProgrammController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $lp = LearningProgram::firstWhere('id', $id);
+        if (!$lp) abort(404);
+
+        DB::beginTransaction();
+        try {
+
+            if ($request->plan) {
+                $fileName = time().'_'.$request->plan->getClientOriginalName();
+                $filePath = $request->file('plan')->storeAs('working_programs', $fileName, 'public');
+
+                 if (!empty($lp->working_program)) {
+                     Storage::disk('public')->delete($lp->working_program);
+                 }
+
+                $request->merge([
+                    'working_program' => $filePath
+                ]);
+            }
+
+            $lp->update($request->all());
+            DB::commit();
+            $request->session()->flash('success', 'Данные успешно обновлены 👍');
+            return back();
+        } catch (\Exception $exception) {
+            DB::rollback();
+            $request->session()->flash('error', 'При обновлении данных произошла ошибка 😢' . $exception );
+            return back();
+        }
     }
 
     /**
@@ -119,5 +150,43 @@ class LearningProgrammController extends Controller
         if (!$lp) abort(404);
 
         return view('lp.detail', compact('lp'));
+    }
+
+    public function completeActivity(Request $request, $lp, $theme, $activity) {
+
+        $request->merge([
+            'learning_program_id' => $lp,
+            'theme_id' => $theme,
+            'activity_id' => $activity,
+            'user_id' => Auth::user()->id,
+        ]);
+
+        DB::beginTransaction();
+        try {
+
+            CompleteActivity::create($request->all());
+
+            DB::commit();
+            $request->session()->flash('success', 'Активность завершена 👍');
+            return back();
+        } catch (\Exception $exception) {
+            DB::rollback();
+            $request->session()->flash('error', 'При обновлении данных произошла ошибка 😢');
+            return back();
+        }
+
+    }
+
+    public function showActivity($lp, $theme, $activity) {
+        $lp = LearningProgram::firstWhere('id', $lp);
+        if (!$lp) abort(404);
+        $theme = Theme::firstWhere('id', $theme);
+        if (!$theme) abort(404);
+        $activity = Activity::firstWhere('id', $activity);
+        if (!$activity) abort(404);
+
+        return view('lp.showActivity', compact('lp', 'theme', 'activity'));
+
+
     }
 }

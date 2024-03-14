@@ -68,10 +68,17 @@
                         </div>
                     </div>
 
-                    <div class="accordion stick-top accordion-bordered course-content-fixed mt-3" id="courseContent">
+                    <div class="accordion accordion-bordered mt-3">
+
+                        @php $prevThemeComplete = false @endphp
 
                         @foreach($lp->themes as $theme)
+                            @if($theme->activities->count() == 0) @php continue; @endphp @endif
+                            @php
+                                $completeActivitiesTheme = checkCompleteAllTheme($lp->id, $theme->id);
+                            @endphp
                             <div class="accordion-item shadow-none border @if(!$loop->last) border-bottom-0 @endif active mb-0">
+
                                 <div class="accordion-header">
                                     <button type="button" class="accordion-button bg-lighter rounded-0" data-bs-toggle="collapse" data-bs-target="#theme{{$theme->id}}" aria-expanded="true" aria-controls="theme{{$theme->id}}">
                                   <span class="d-flex flex-column">
@@ -79,30 +86,81 @@
                                       @if($theme->activities->count() == 0)
                                           <span class="fw-normal text-danger">В данной теме нет активностей</span>
                                       @else
-                                          <span class="fw-normal">0 / {{$theme->activities->count()}} </span>
+                                          <span class="fw-light">Активности (выполнено/всего): {{$completeActivitiesTheme['count']}} / {{$theme->activities->count()}} </span>
                                       @endif
 
                                   </span>
                                     </button>
                                 </div>
-                                <div id="theme{{$theme->id}}" class="accordion-collapse collapse @if($loop->first) show @endif" data-bs-parent="#courseContent">
+                                <div id="theme{{$theme->id}}" class="accordion-collapse collapse show" data-bs-parent="#courseContent">
                                     <div class="accordion-body py-3 border-top">
+                                        @if (!$prevThemeComplete && !$loop->first)
+                                            <div class="blur-overlay">
+                                                <i class="bx bx-lock fs-2"></i>
+                                                <p class="mt-2 mb-0">Тема заблокирована, заврешите предыдущие активности</p>
+                                            </div>
+                                        @endif
                                         @if($theme->activities->count() != 0)
+                                            <ol class="ps-4 activities-list">
+                                            @php $activityLock = false; @endphp
                                             @foreach($theme->activities as $activity)
-                                                <div class="form-check d-flex align-items-center mb-3">
-                                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" checked="">
-                                                    <label for="defaultCheck1" class="form-check-label ms-3">
-                                                        <span class="mb-0 h6">{{$activity->name}}</span>
-                                                        <span class="text-muted d-block">Кол-во часов: {{$activity->count_hours}}</span>
-                                                    </label>
-                                                </div>
+
+                                                @if(!$prevThemeComplete && !$loop->parent->first) @php $activityLock = true; @endphp @endif
+
+{{--                                                {{$activity->complete}}--}}
+                                                <li class="@if($activityLock) text-muted disabled-activity @else text-dark @endif">
+
+                                                    <div class="d-flex align-content-between align-items-center">
+                                                        <a href="@if($activityLock) # @else {{route('learning-program.showActivity', ['learning_program' => $lp->id, 'theme' => $theme->id, 'activity' => $activity->id])}} @endif" class="flex-grow-1 @if($activityLock) text-muted disabled-activity @else text-dark @endif">
+                                                            <div class="lp-body flex-grow-1">
+                                                                <p class="lp-body__name mb-0 ">
+                                                                    {{$activity->name}}
+                                                                </p>
+                                                                <div class="d-flex fs-tiny align-items-center mt-2">
+                                                                    <span class="badge @if($activityLock)bg-label-secondary @else bg-label-{{$activity->type->color}} @endif  activity-type">{{$activity->type->name}}</span>
+                                                                    <span class="activity-hours">{{$activity->count_hours}}</span>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                        <div class="lp-actions d-flex gap-2">
+                                                            @if($activityLock)
+                                                                Активность закрыта
+                                                            @else
+                                                                <a href="{{route('learning-program.showActivity', ['learning_program' => $lp->id, 'theme' => $theme->id, 'activity' => $activity->id])}}" class="btn btn-sm rounded-pill btn-icon btn-label-primary" data-bs-toggle="tooltip"  data-bs-placement="top" data-bs-title="Просмотреть активность">
+                                                                    <span class="tf-icons bx bx-show"></span>
+                                                                </a>
+                                                                @php $completeActivity = checkCompleteActivity($lp->id, $theme->id, $activity->id) @endphp
+                                                                @if($completeActivity)
+                                                                    <span class="text-primary fw-bold">Активность завершена 🥳</span>
+                                                                @else
+                                                                    @php $activityLock = true; @endphp
+                                                                    <form action="{{route('learning_program.complete', [
+                                                                    'learning_program' => $lp->id,
+                                                                    'theme_id' => $theme->id,
+                                                                    'activity_id' => $activity->id,
+                                                                    ])}}" method="POST">
+                                                                        @csrf
+                                                                        <button type="submit" class="btn btn-sm rounded-pill btn-icon btn-label-secondary" data-bs-toggle="tooltip"  data-bs-placement="top" data-bs-title="Завершить активность">
+                                                                            <span class="tf-icons bx bx-check-double"></span>
+                                                                        </button>
+                                                                    </form>
+                                                                @endif
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </li>
+
                                             @endforeach
+                                            </ol>
+                                        @else
+                                            <span class="fw-normal">Активности еще не добавлены 😢</span>
                                         @endif
 
 
                                     </div>
                                 </div>
                             </div>
+                            @php $prevThemeComplete = $completeActivitiesTheme['result'] @endphp
                         @endforeach
 
                 </div>

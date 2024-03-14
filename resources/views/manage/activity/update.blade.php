@@ -17,7 +17,7 @@
             <div class="card mb-4">
                 <h5 class="card-header pb-2">Редактирование активности</h5>
                 <div class="card-body">
-                    <form action="{{route('activity.update', ['activity' => $activity->id])}}" method="POST" class="quill-form" enctype="multipart/form-data">
+                    <form action="{{route('activity.update', ['activity' => $activity->id])}}" method="POST" id="form-editor" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
                         <input type="hidden" name="url" value="{{$url ?? old('url') ?? url()->previous()}}">
@@ -80,14 +80,16 @@
                         <div class="row mt-2">
                             <div class="col">
                                 <label for="content" class="form-label">Контент активности</label>
-                                <div class="quill">{!! $activity->content !!}</div>
-                                <input type="hidden" name="content" id="quill-html" value="{!! $activity->content !!}">
+                                <textarea name="content" id="editor-html" class="d-none">{!! $activity->content !!}</textarea>
+                                <div class="code-html tui-doc-contents">
+                                    <div id="editor">{!! $activity->content !!}</div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="row mt-2">
                             <div class="col">
-                                <button type="submit" class="btn btn-success">Сохранить</button>
+                                <button type="submit" class="btn btn-success" id="save">Сохранить</button>
                             </div>
                         </div>
                     </form>

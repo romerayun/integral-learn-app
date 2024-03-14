@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Str;
 use LaravelLang\Publisher\Concerns\Has;
 use Spatie\Activitylog\Models\Activity;
@@ -31,6 +32,7 @@ class UserAdminController extends Controller
      */
     public function create()
     {
+//        dd(public_path() . '/build/assets/registration-11a622b1.png');
         $roles = Role::all();
         return view('manage.users.create', compact('roles'));
     }
@@ -94,15 +96,66 @@ class UserAdminController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = User::firstWhere('id', $id);
+        if (!$user) abort(404);
+
+        $roles = Role::all();
+        return view('manage.users.edit', compact('user', 'roles'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreUser $request, string $id)
     {
-        //
+        $userOld = User::firstWhere('id', $id);
+        $sendEmail = false;
+        DB::beginTransaction();
+        $data = [];
+        try {
+            if ($userOld->email != $request->email) {
+                $email = $request->email;
+                $password = Str::random(8);
+                $token = Str::random(64);
+                $request->merge([
+                    'password' => Hash::make($password),
+                    'is_email_verified' => 0
+                ]);
+
+                $userVerify = UserVerify::firstWhere('user_id', $id);
+                if ($userVerify) {
+                    $userVerify->token = $token;
+                    $userVerify->save();
+                } else {
+                    UserVerify::create([
+                        'user_id' => $userOld->id,
+                        'token' => $token
+                    ]);
+                }
+
+                $mailContent = [
+                    'token' => $token,
+                    'user' => $userOld,
+                    'password' => $password,
+                ];
+                $sendEmail = true;
+            }
+
+
+
+            $userOld->update($request->all());
+            DB::commit();
+
+            if ($sendEmail)  Mail::to($email)->send(new RegistrationMail($mailContent));
+
+            $request->session()->flash('success', 'Данные успешно добавлены 👍');
+            return back();
+        } catch (\Exception $exception) {
+            DB::rollback();
+
+            $request->session()->flash('error', 'При добавлении данных произошла ошибка 😢' . $exception);
+            return back();
+        }
     }
 
     /**
