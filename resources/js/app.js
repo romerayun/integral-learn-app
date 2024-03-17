@@ -25,9 +25,7 @@ import "../assets/js/quiz.js";
 
 import 'simple-datatables/src/css/style.css';
 
-
-import '../assets/vendor/libs/result/jodit.min.css';
-import '../assets/vendor/libs/result/jodit.min.js';
+// import '../assets/vendor/libs/ckeditor/ckeditor.js';
 //
 // import "../assets/vendor/libs/datatables/bootstrap.min.css";
 // import 'datatables.net-dt/css/jquery.dataTables.min.css';

@@ -274,6 +274,7 @@
 </div>
 
 
+<script src="{{asset('extensions/ckeditor/ckeditor.js')}}"></script>
 <script>
     let fullUrl = window.location.origin;
     if (window.location.pathname !== '/')
@@ -288,6 +289,15 @@
                 item.closest('.menu-item').closest('.menu-sub').closest('.menu-item').classList.add('active', 'open');
             }
         }
+    }
+
+    if (document.getElementById('ckeditor')) {
+        CKEDITOR.replace('ckeditor', {
+            customConfig: '{{asset('extensions/ckeditor/config.js')}}',
+
+            filebrowserUploadUrl: "{{route('uploadEditorImage', ['_token' => csrf_token() ])}}",
+            filebrowserUploadMethod: 'form',
+        });
     }
 </script>
 {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>--}}

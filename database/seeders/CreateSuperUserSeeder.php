@@ -20,6 +20,7 @@ class CreateSuperUserSeeder extends Seeder
             'surname' => 'Админов',
             'name' => 'Админ',
             'patron' => 'Админович',
+            'email' => 'superuser@info.ru',
             'phone' => '+7 (999) 999-99-99',
             'series_passport' => '9999',
             'number_passport' => '999999',

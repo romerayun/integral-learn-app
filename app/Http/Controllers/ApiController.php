@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -79,28 +80,36 @@ class ApiController extends Controller
         return json_encode($res);
     }
 
-    public function uploadEditorImage(Request $request) {
+    public function upload(Request $request) {
 
-//        $file = Input::file('attachment');
-        dd($request->files);
-        if ($request->files->count()) {
-            foreach ($request->files as $file) {
-                $fileName = time().'_'.$file[0]->getClientOriginalName();
-                echo $fileName;
-                $filePath = $request->file('files')[0]->storeAs('learning_program', $fileName, 'public');
+        if($request->hasFile('upload')) {
+            $originName = $request->file('upload')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+
+            $fileName = time().'.'.$extension;
+
+            if (!File::isDirectory(public_path('files'))) {
+                File::makeDirectory(public_path('files'));
             }
-        } else {
-            return false;
+
+            if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'webp') {
+                $image = Image::make($request->file('upload'));
+                $image->save(public_path('files/' . $fileName), 50, $extension);
+            } else {
+                $request->file('upload')->move(public_path('files/'), $fileName);
+            }
+
+
+
+
+            $CKEditorFuncNum = $request->input('CKEditorFuncNum');
+            $url = asset('files/'.$fileName);
+            $msg = 'Файл был успешно загружено';
+            $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";
+
+            @header('Content-type: text/html; charset=utf-8');
+            echo $response;
         }
-
-
-
-//        if ($request[0]) {
-
-            return $filePath;
-
-//        } else {
-//            return false;
-//        }
     }
 }

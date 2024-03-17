@@ -50,12 +50,9 @@
 
                         <div class="row mt-2">
                             <div class="col">
-                                <label for="annotation" class="form-label">Аннотация учебной программы</label>
-                                <textarea name="annotation" id="editor-html" class="d-none"></textarea>
-{{--                                <div id="editor"></div>--}}
-                                <div class="code-html tui-doc-contents">
-                                    <div id="editor"></div>
-                                </div>
+                                <label for="ckeditor" class="form-label">Аннотация учебной программы</label>
+                                <textarea name="annotation" id="ckeditor" rows="10" cols="80" required></textarea>
+
                             </div>
                         </div>
 
