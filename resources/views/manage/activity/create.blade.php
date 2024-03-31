@@ -96,11 +96,8 @@
 
                         <div class="row mt-2">
                             <div class="col">
-                                <label for="content" class="form-label">Контент активности</label>
-                                <textarea name="content" id="editor-html" class="d-none"></textarea>
-                                <div class="code-html tui-doc-contents">
-                                    <div id="editor"></div>
-                                </div>
+                                <label for="ckeditor" class="form-label">Контент активности</label>
+                                <textarea name="content" id="ckeditor" rows="10" cols="80" required></textarea>
                             </div>
                         </div>
 

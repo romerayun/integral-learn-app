@@ -5,6 +5,7 @@
 
     <h4 class="fw-bold py-3 mb-0"><span class="text-muted fw-light">Управление /</span> Редактор теста</h4>
 
+    @csrf
     <div class="row">
         <div class="col-md-12">
 

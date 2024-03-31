@@ -40,7 +40,9 @@
                              @if(strlen(strip_tags($lp->annotation)) == 0)
                                  <p class="text-danger">Аннотация курса не заполнена</p>
                             @else
-                                 {!! $lp->annotation !!}
+                                 <div class="annotation">
+                                    {!! $lp->annotation !!}
+                                 </div>
                             @endif
                         </div>
                         <hr class="my-4">

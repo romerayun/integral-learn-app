@@ -44,7 +44,7 @@
                                         </td>
                                         <td>
                                             @if($item->working_program)
-                                                <a href="/storage/{{$item->working_program}}" download="Рабочая программа учебной программы - {{$item->name}}">Скачать</a>
+                                                <a href="/storage/{{($item->working_program)}}" download="Рабочая программа учебной программы - {{$item->name}}">Скачать</a>
                                             @else
                                                 <span class="text-danger">Рабочая программа не добавлена</span>
                                             @endif

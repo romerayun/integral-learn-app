@@ -409,9 +409,11 @@ $(document).ready(function () {
                 files.append("EAnswers", JSON.stringify(editAnswers));
                 files.append("idQuestionFiles", JSON.stringify(idQFiles));
 
-
                 $.ajax({
                     type : "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $("input[name='_token']").val()
+                    },
                     url : '/api/createQuiz/' + $("#activity").val(),
                     cache: false,
                     enctype: 'multipart/form-data',
@@ -420,14 +422,13 @@ $(document).ready(function () {
                     data : files,
                     success: function (result) {
 
-
                         if (result.code === 200) {
                             location.reload();
                         } else {
                             showToast('danger', 'Ошибка', "При обновлении теста, произошла ошибка");
                         }
 
-                    }
+                    },
                 });
             }
         }

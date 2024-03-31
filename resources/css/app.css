@@ -243,3 +243,7 @@ body .square-color-warning {
 .text-start.divider .divider-text:before {
     display: none !important;
 }
+
+.annotation img {
+    width: 100% !important;
+}

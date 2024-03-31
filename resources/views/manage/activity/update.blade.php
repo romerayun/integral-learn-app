@@ -79,12 +79,10 @@
 
                         <div class="row mt-2">
                             <div class="col">
-                                <label for="content" class="form-label">Контент активности</label>
-                                <textarea name="content" id="editor-html" class="d-none">{!! $activity->content !!}</textarea>
-                                <div class="code-html tui-doc-contents">
-                                    <div id="editor">{!! $activity->content !!}</div>
-                                </div>
+                                <label for="ckeditor" class="form-label">Контент активности</label>
+                                <textarea name="content" id="ckeditor" rows="10" cols="80" required>{!!$activity->content!!}</textarea>
                             </div>
+
                         </div>
 
                         <div class="row mt-2">
