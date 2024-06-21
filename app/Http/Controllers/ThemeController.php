@@ -227,6 +227,7 @@ class ThemeController extends Controller
 
     public function destroy(Request $request, string $id)
     {
+
         $theme = LearningProgramTheme::where('theme_id', $id)->where('learning_program_id', $request->learning_program_id);
         if (!$theme) return response()->json([
             'message' => "При удалении темы произошла ошибка",

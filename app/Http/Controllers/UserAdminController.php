@@ -122,6 +122,10 @@ class UserAdminController extends Controller
                     'is_email_verified' => 0
                 ]);
 
+//                $userOld->removeRole($userOld->getRoleNames());
+//                $userOld->roles()->detach();
+
+
                 $userVerify = UserVerify::firstWhere('user_id', $id);
                 if ($userVerify) {
                     $userVerify->token = $token;
@@ -141,6 +145,9 @@ class UserAdminController extends Controller
                 $sendEmail = true;
             }
 
+            $userOld->syncRoles([]);
+            $role = Role::findOrFail($request->role_id);
+            $userOld->assignRole($role->name);
 
 
             $userOld->update($request->all());

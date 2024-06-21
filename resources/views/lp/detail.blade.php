@@ -135,17 +135,19 @@
                                                                 @if($completeActivity)
                                                                     <span class="text-primary fw-bold">Активность завершена 🥳</span>
                                                                 @else
-                                                                    @php $activityLock = true; @endphp
-                                                                    <form action="{{route('learning_program.complete', [
-                                                                    'learning_program' => $lp->id,
-                                                                    'theme_id' => $theme->id,
-                                                                    'activity_id' => $activity->id,
-                                                                    ])}}" method="POST">
-                                                                        @csrf
-                                                                        <button type="submit" class="btn btn-sm rounded-pill btn-icon btn-label-secondary" data-bs-toggle="tooltip"  data-bs-placement="top" data-bs-title="Завершить активность">
-                                                                            <span class="tf-icons bx bx-check-double"></span>
-                                                                        </button>
-                                                                    </form>
+                                                                    @if($activity->type->id != getIdTypeQuiz())
+                                                                        @php $activityLock = true; @endphp
+                                                                        <form action="{{route('learning_program.complete', [
+                                                                        'learning_program' => $lp->id,
+                                                                        'theme_id' => $theme->id,
+                                                                        'activity_id' => $activity->id,
+                                                                        ])}}" method="POST">
+                                                                            @csrf
+                                                                            <button type="submit" class="btn btn-sm rounded-pill btn-icon btn-label-secondary" data-bs-toggle="tooltip"  data-bs-placement="top" data-bs-title="Завершить активность">
+                                                                                <span class="tf-icons bx bx-check-double"></span>
+                                                                            </button>
+                                                                        </form>
+                                                                    @endif
                                                                 @endif
                                                             @endif
                                                         </div>

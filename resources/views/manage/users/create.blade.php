@@ -47,7 +47,7 @@
 {{--                        </div>--}}
                         <div class="row">
                             <div class="col-lg-6 col-md-12">
-                                <label for="learning_program" class="form-label">Выберите права для добавляемой роли</label>
+                                <label for="learning_program" class="form-label">Выберите роль пользователя</label>
                                 <div class="select2-primary">
                                     <div class="position-relative">
                                         <select id="role_id" required name="role_id"

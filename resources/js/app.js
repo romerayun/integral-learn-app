@@ -18,6 +18,10 @@ import 'apexcharts/dist/apexcharts.css';
 import "../assets/vendor/libs/sweetalert2/sweetalert2.min.css";
 import "../assets/vendor/libs/sweetalert2/sweetalert2.all.js";
 
+import 'lightbox2/dist/js/lightbox.min.js';
+import 'lightbox2/dist/css/lightbox.min.css';
+
+
 import "../assets/js/cards-actions.js";
 import "../assets/js/custom.js";
 import "../assets/js/validation.js";

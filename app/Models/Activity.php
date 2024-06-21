@@ -42,4 +42,8 @@ class Activity extends Model
     public function complete() {
         return $this->hasMany(CompleteActivity::class, 'activity_id', 'id');
     }
+
+    public function results() {
+        return $this->hasMany(Result::class)->orderBy('created_at', 'desc');
+    }
 }

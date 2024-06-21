@@ -95,7 +95,6 @@
     </div>
     <div class="offcanvas-body flex-grow-1">
         <form class="edit-record pt-0 row g-2" id="form-edit-theme">
-            @csrf
             <div class="col-sm-12">
                 <label class="form-label" for="name">Наименование</label>
                 <div>

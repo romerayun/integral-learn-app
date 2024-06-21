@@ -15,6 +15,7 @@
             </div>
 
             <input type="hidden" id="learning_program_id" value="{{$lp->id}}">
+            @csrf
 
             <div class="row">
                 <div class="col-lg-8 col-md-12">
@@ -142,7 +143,37 @@
 
                         </div>
                 </div>
-                <div class="col-lg-4 col-md-12"></div>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <div class="card card-action mb-4">
+                        <div class="card-body">
+                            <form action="{{route('learning-program.storeTeacher', ['learning_program' => $lp->id])}}" method="POST">
+                                @csrf
+                                <div>
+                                    <label for="user_id" class="form-label">Назначьте преподавателей для учебной программы<sup class="text-danger">*</sup></label>
+                                    <select id="user_id" name="user_id" class="select2 form-select @if($errors->has('user_id')) is-invalid @endif" multiple>
+                                        @foreach($users as $user)
+{{--                                            @if()--}}
+                                            <option value="{{$user->id}}">{{$user->surname}}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="form-text text-danger">
+                                        @if($errors->has('theme_id'))
+                                            @foreach($errors->get('theme_id') as $message)
+                                                {{$message}}<br>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <button type="submit" class="btn btn-success" id="save">Сохранить</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 

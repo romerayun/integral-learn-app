@@ -21,6 +21,7 @@ import JustValidatePluginDate from 'just-validate-plugin-date';
 import ImageUploader from "quill-image-uploader";
 import {DataTable} from 'simple-datatables';
 import ApexCharts from 'apexcharts';
+
 import {
     Draggable,
     Sortable,

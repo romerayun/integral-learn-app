@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\CompleteActivity;
 use App\Models\LearningProgram;
+use App\Models\LearningProgramTeacher;
 use App\Models\LearningProgramTheme;
+use App\Models\Question;
+use App\Models\Result;
 use App\Models\Theme;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -70,8 +74,9 @@ class LearningProgrammController extends Controller
 
         $ids = collect($lp->themes->toArray())->pluck('id');
         $themes = Theme::whereNotIn('id', $ids)->orderBy('name', 'asc')->get();
+        $users = User::role('prepodavatel')->get();
 
-        return view('manage.learning-programs.show', compact('lp', 'themes'));
+        return view('manage.learning-programs.show', compact('lp', 'themes', 'users'));
     }
 
     /**
@@ -154,6 +159,11 @@ class LearningProgrammController extends Controller
 
     public function completeActivity(Request $request, $lp, $theme, $activity) {
 
+        if ($activity == getIdTypeQuiz()) {
+            $request->session()->flash('error', 'Завершение тестирования, возможно только при его прохождении!');
+            return back();
+        }
+
         $request->merge([
             'learning_program_id' => $lp,
             'theme_id' => $theme,
@@ -185,7 +195,113 @@ class LearningProgrammController extends Controller
         $activity = Activity::firstWhere('id', $activity);
         if (!$activity) abort(404);
 
+        $prevAct = prevActivity($lp->id, $theme->id, $activity->id);
+
+        if ($prevAct) {
+            if(!checkCompleteActivity($lp->id, $prevAct->themes->first()->id, $prevAct->id)) {
+                abort(403);
+            }
+        }
+
+
         return view('lp.showActivity', compact('lp', 'theme', 'activity'));
+
+
+    }
+
+    public function storeQuiz($lp, $theme, $activity, Request $request) {
+//        dd($request, $lp);
+        DB::beginTransaction();
+        try {
+            $countRightAnswer = 0;
+            foreach ($request->answers as $question) {
+
+                $q = Question::findOrFail($question['question_id']);
+                $questionRight[$q->id] = $q->answers->where('isCorrect', 1)->pluck('id')->all();
+
+                $countAnswers = count($questionRight[$q->id]);
+                if ($countAnswers == count($request->answers[$q->id]['answers'])) {
+
+                    $allAnswersRight = 0;
+                    foreach ($questionRight[$q->id] as $key => $answer) {
+    //                    echo 'Правильный ответ - ' .$answer . "<br>";
+    //                    echo 'Ответ пользователя - ' .$request->answers[$q->id]['answers'][$key] . "<br>";
+                        if ($answer == $request->answers[$q->id]['answers'][$key]) {
+                            $allAnswersRight++;
+                        }
+                    }
+
+                    if ($countAnswers == $allAnswersRight) $countRightAnswer++;
+                }
+
+            }
+
+            $res = array(
+                'user_id' => Auth::user()->id,
+                'activity_id' => $activity,
+                'answers' => json_encode($request->answers),
+                'countRightAnswers' => $countRightAnswer
+            );
+
+            Result::create($res);
+
+            if (checkPassedQuiz(count($request->answers), $countRightAnswer)) {
+                $completeActivity = [
+                    'learning_program_id' => $lp,
+                    'theme_id' => $theme,
+                    'activity_id' => $activity,
+                    'user_id' => Auth::user()->id,
+                ];
+                CompleteActivity::create($completeActivity);
+
+                DB::commit();
+                $request->session()->flash('success', 'Тест успешно завершен 👍');
+                return back();
+            }
+
+            DB::commit();
+            $request->session()->flash('error', 'К сожалению тест не пройден, попробуйте пройти тест еще раз 😢');
+            return back();
+
+        } catch (\Exception $exception) {
+            DB::rollback();
+            $request->session()->flash('error', 'При добавлении данных произошла ошибка 😢');
+            return back();
+        }
+
+
+
+    }
+
+    public function storeTeacher(Request $request, $lp) {
+
+        $request->merge([
+            'learning_program_id' => $lp,
+        ]);
+
+        DB::beginTransaction();
+        try {
+
+            if (is_array($request->user_id)) {
+                foreach ($request->user_id as $user) {
+                    LearningProgramTeacher::create([
+                        'user_id' => $user,
+                        'learning_program_id' => $lp,
+                    ]);
+                }
+            } else {
+                LearningProgramTeacher::create($request->all());
+            }
+
+
+            DB::commit();
+            $request->session()->flash('success', 'Преподаватель успешно прикреплен 👍');
+            return back();
+        } catch (\Exception $exception) {
+            DB::rollback();
+            $request->session()->flash('error', 'При обновлении данных произошла ошибка 😢');
+            return back();
+        }
 
 
     }

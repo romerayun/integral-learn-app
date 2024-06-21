@@ -1,5 +1,10 @@
 <?php
-    if (! function_exists('getCountHoursTheme')) {
+
+use App\Models\LearningProgram;
+
+const REQUIRED_RIGHT_ANSWERS = 50;
+
+if (! function_exists('getCountHoursTheme')) {
         function getCountHoursTheme($theme_id) {
 
             $theme = \App\Models\Theme::firstWhere('id', $theme_id);
@@ -30,27 +35,29 @@
     }
 
     if (! function_exists('getTypeActivityLog')) {
-    function getTypeActivityLog($event) {
-        $colorsActivityLogs = [
-            'created' => [
-                'color' => 'success',
-                'name' => 'Создание'
-            ],
-            'updated' => [
-                'color' => 'warning',
-                'name' => 'Редактирование'
-            ],
-            'deleted' => [
-                'color' => 'danger',
-                'name' => 'Удаление'
-            ],
-            'default' => [
-                'color' => 'info',
-                'name' => 'Обычное действие'
-            ],
-        ];
+        function getTypeActivityLog($event)
+        {
+            $colorsActivityLogs = [
+                'created' => [
+                    'color' => 'success',
+                    'name' => 'Создание'
+                ],
+                'updated' => [
+                    'color' => 'warning',
+                    'name' => 'Редактирование'
+                ],
+                'deleted' => [
+                    'color' => 'danger',
+                    'name' => 'Удаление'
+                ],
+                'default' => [
+                    'color' => 'info',
+                    'name' => 'Обычное действие'
+                ],
+            ];
 
-        return $colorsActivityLogs[$event];
+            return $colorsActivityLogs[$event];
+        }
     }
 
 
@@ -107,6 +114,87 @@
 
         }
     }
-}
+
+    if (!function_exists('prevActivity')) {
+        function prevActivity($lp, $theme, $activity_id) {
+
+            $lp = LearningProgram::firstWhere('id', $lp);
+
+            $activities = [];
+            $i = 0;
+            foreach ($lp->themes as $theme) {
+
+                foreach ($theme->activities as $activity) {
+                    $activities[] = $activity;
+                    if ($activity->id == $activity_id) {
+                        if ($i == 0) return false;
+                        else return $activities[$i-1];
+                    }
+                    $i++;
+                }
+            }
+
+            return false;
+
+        }
+    }
+
+        if (!function_exists('nextActivity')) {
+            function nextActivity($lp, $theme, $activity_id) {
+
+                $lp = LearningProgram::firstWhere('id', $lp);
+
+                $activities = [];
+                $i = 0;
+                $temp = 0;
+                foreach ($lp->themes as $theme) {
+
+                    foreach ($theme->activities as $activity) {
+                        $activities[] = $activity;
+                        if ($activity->id == $activity_id) {
+                            $temp = $i + 1;
+                        }
+                        $i++;
+                    }
+                }
+
+                if (isset($activities[$temp])) {
+                    return $activities[$temp];
+                } else {
+                    return false;
+                }
+
+//                return false;
+
+            }
+        }
+
+        if (!function_exists('getColorQuiz')) {
+            function getColorQuiz($percent) {
+
+                if ($percent < 50) {
+                    return 'danger';
+                } else if ($percent < 75) {
+                    return 'warning';
+                } else {
+                    return 'success';
+                }
+
+            }
+        }
+
+        if (!function_exists('checkPassedQuiz')) {
+            function checkPassedQuiz($countQuestions, $rightAnswers) {
+                $percentRightAnswers = round($rightAnswers / $countQuestions * 100);
+                if ($percentRightAnswers >= REQUIRED_RIGHT_ANSWERS) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+
+
 
 

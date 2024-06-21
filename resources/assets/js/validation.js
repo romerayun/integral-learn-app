@@ -212,18 +212,25 @@ $(document).ready(function () {
 
             if (theme) {
                  response = await fetch('/api/destroy-theme/' + value, {
-                    method: 'DELETE',
+                     method: 'DELETE',
                      headers: {
-                         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                         "X-CSRF-Token": $('input[name="_token"]').val()
                      },
-                    body: body
+                     body: body
                 });
             } else {
                 response = await fetch('/api/destroy-activity/' + value, {
                     method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                        "X-CSRF-Token": $('input[name="_token"]').val()
+                    },
                     body: body
                 });
             }
+
+
 
             let result = await response.json();
 
@@ -293,13 +300,14 @@ $(document).ready(function () {
                     let name = $("#form-edit-theme #name").val();
                     let theme = $("#theme-id").val();
 
-                    let body = 'name=' + encodeURIComponent(name) + '&_token=' + encodeURIComponent($("#form-edit-theme #token").val());
+                    let body = 'name=' + encodeURIComponent(name);
 
 
                     let response = await fetch('/api/update-theme/' + theme, {
                         method: 'PUT',
                         headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                            "X-CSRF-Token": $('input[name="_token"]').val()
                         },
                         body: body
                     });

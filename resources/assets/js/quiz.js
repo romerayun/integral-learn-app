@@ -481,4 +481,36 @@ $(document).ready(function () {
 
 
 
+    $("#finishQuiz").click(function (event) {
+        event.preventDefault();
+        let emptyResult = false;
+
+        $(".question-item").children("li").each(function( index ) {
+            let answers = $(this).children('ul');
+            let checkedAnswer = 0;
+
+            answers.children('li').each(function (i) {
+                if ($(this).find('input').is(':checked')) {
+                    checkedAnswer++;
+                }
+            });
+
+            if (checkedAnswer === 0) {
+                $(this).css('color', 'red');
+                emptyResult = true;
+            } else {
+                $(this).css('color', 'inherit');
+            }
+        });
+
+        if (emptyResult) {
+            showToast('danger', 'Ошибка', 'Не выбраны парвильные ответы в некоторых вопросах!');
+        } else {
+            $("#quizForm").submit();
+        }
+    });
+
+
+
+
 })
