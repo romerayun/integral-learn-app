@@ -35,4 +35,5 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/get-activity-log', [\App\Http\Controllers\ApiController::class, 'getActivityByDate']);
 //    Route::post('/upload-editor-image', [\App\Http\Controllers\ApiController::class, 'uploadEditorImage']);
     Route::post('/upload-editor-image', [\App\Http\Controllers\ApiController::class, 'upload'])->name('uploadEditorImage');
+    Route::get('/get-count-questions/{learning_program}', [\App\Http\Controllers\ApiController::class, 'getCountQuestions']);
 });

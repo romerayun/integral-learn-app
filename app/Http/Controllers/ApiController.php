@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LearningProgram;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -111,5 +112,40 @@ class ApiController extends Controller
             @header('Content-type: text/html; charset=utf-8');
             echo $response;
         }
+    }
+
+    public function getCountQuestions($lp)
+    {
+        $learningProgram = LearningProgram::find($lp);
+
+        if (!$learningProgram) return response()->json([
+            'code' => 500,
+            'message' => "Учебная программа не найдена",
+            'countQ' => 0
+        ], 500);
+
+
+        if (!$learningProgram->themes->count()) return response()->json([
+            'code' => 200,
+            'message' => "Вопросов не найдно",
+            'countQ' => 0
+        ], 200);
+
+        $countQuestions = 0;
+
+        foreach ($learningProgram->themes as $theme) {
+            if (!$theme->activities->count()) continue;
+            foreach ($theme->activities as $activity) {
+                if ($activity->type_id == getIdTypeQuiz()) {
+                    $countQuestions += $activity->questions->count();
+                }
+            }
+        }
+
+        return response()->json([
+            'code' => 200,
+            'message' => "Вопросов в учебной программе",
+            'countQ' => $countQuestions
+        ], 200);
     }
 }

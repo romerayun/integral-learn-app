@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 
@@ -253,5 +254,37 @@ class AuthenticationController extends Controller
 
         return redirect()->route('login')->with('error', $message);
 
+    }
+
+    public function settings ()
+    {
+        return view('auth.settings');
+    }
+
+    public function storeAvatar (Request $request)
+    {
+        DB::beginTransaction();
+        try {
+
+            if ($request->avatar) {
+                $fileName = time().'_'.$request->avatar->getClientOriginalName();
+                $filePath = $request->file('avatar')->storeAs('avatars', $fileName, 'public');
+
+                if(Auth::user()->avatar) {
+                    Storage::disk('public')->delete(Auth::user()->avatar);
+                }
+
+                Auth::user()->avatar = $filePath;
+                Auth::user()->save();
+            }
+
+            DB::commit();
+            $request->session()->flash('success', 'Данные успешно добавлены 👍');
+            return back();
+        } catch (\Exception $exception) {
+            DB::rollback();
+            $request->session()->flash('error', 'При добавлении данных произошла ошибка 😢');
+            return back();
+        }
     }
 }

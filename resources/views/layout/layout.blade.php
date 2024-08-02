@@ -39,13 +39,6 @@
 
             <ul class="menu-inner py-1">
 
-                <li class="menu-item">
-                    <a href="{{route('main')}}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bxs-home"></i>
-                        <div data-i18n="Главная">Главная</div>
-                    </a>
-                </li>
-
 
                 <li class="menu-header small text-uppercase">
                     <span class="menu-header-text">Мое обучение</span>
@@ -57,6 +50,14 @@
                         <div data-i18n="Студенты">Мои учебные программы</div>
                     </a>
                 </li>
+
+                <li class="menu-item">
+                    <a href="{{route('final-quiz.getFinalQuiz')}}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bxs-customize"></i>
+                        <div data-i18n="Студенты">Итоговое тестирование</div>
+                    </a>
+                </li>
+
 
 
                 <li class="menu-header small text-uppercase">
@@ -100,8 +101,31 @@
                     </a>
                 </li>
 
+                <li class="menu-item">
+                    <a href="{{route('final-quiz.index')}}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bxs-customize"></i>
+                        <div data-i18n="Студенты">Итоговое тестирование</div>
+                    </a>
+                </li>
 
 
+                <li class="menu-header small text-uppercase">
+                    <span class="menu-header-text">Настройки</span>
+                </li>
+
+                <li class="menu-item">
+                    <a href="{{route('user.profile-settings')}}" class="menu-link">
+                        <i class='menu-icon bx bxs-cog' ></i>
+                        <div data-i18n="Студенты">Редактирование профиля</div>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a href="{{route('logout')}}" class="menu-link">
+                        <i class="menu-icon bx bx-power-off me-2"></i>
+                        <div data-i18n="Студенты">Выход</div>
+                    </a>
+                </li>
 
 {{--                <li class="menu-item">--}}
 {{--                    <a class="menu-link menu-toggle">--}}
@@ -137,12 +161,16 @@
                 </div>
 
                 <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-                    <p class="mb-0">👋🏻 Здравствуйте, <span>{{auth()->user()->name}}</span></p>
+                    <p class="mb-0">👋🏻 Здравствуйте, <span>{{auth()->user()->name}} {{auth()->user()->patron}}</span></p>
                     <ul class="navbar-nav flex-row align-items-center ms-auto">
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                <div class="avatar avatar-online">
-                                    <img src="{{ Vite::asset('resources/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                                <div class="avatar avatar-online w-px-40 h-px-40">
+                                    @if(!auth()->user()->avatar)
+                                        <img class="img-fluid object-fit-cover rounded-circle " src="{{ Vite::asset('resources/assets/img/no-image.jpeg') }}" alt="Avatar profile">
+                                    @else
+                                        <img class="img-fluid object-fit-cover rounded-circle " src="{{ asset('/storage/' . auth()->user()->avatar)}}" alt="Avatar profile">
+                                    @endif
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -150,46 +178,30 @@
                                     <a class="dropdown-item" href="#">
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 me-3">
-                                                <div class="avatar avatar-online">
-                                                    <img src="{{ Vite::asset('resources/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                                                <div class="avatar avatar-online w-px-40 h-px-40 ">
+                                                    @if(!auth()->user()->avatar)
+                                                        <img class="img-fluid object-fit-cover rounded-circle " src="{{ Vite::asset('resources/assets/img/no-image.jpeg') }}" alt="Avatar profile">
+                                                    @else
+                                                        <img class="img-fluid object-fit-cover rounded-circle " src="{{ asset('/storage/' . auth()->user()->avatar)}}" alt="Avatar profile">
+                                                    @endif
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
                                                 <span class="fw-semibold d-block">{{auth()->user()->surname}} {{auth()->user()->name}}</span>
                                                 @foreach(auth()->user()->roles as $item)
-                                                    <small class="text-muted">{{$item->name}}</small>
+                                                    <small class="text-muted">{{$item->nameRU}}</small>
                                                 @endforeach
                                             </div>
                                         </div>
                                     </a>
                                 </li>
                                 <li>
-                                    <div class="dropdown-divider"></div>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="bx bx-user me-2"></i>
-                                        <span class="align-middle">My Profile</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{route('user.profile-settings')}}">
                                         <i class="bx bx-cog me-2"></i>
-                                        <span class="align-middle">Settings</span>
+                                        <span class="align-middle">Настройки</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                        <span class="d-flex align-items-center align-middle">
-                          <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
-                          <span class="flex-grow-1 align-middle">Billing</span>
-                          <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <div class="dropdown-divider"></div>
-                                </li>
+
                                 <li>
                                     <a class="dropdown-item" href="{{route('logout')}}">
                                         <i class="bx bx-power-off me-2"></i>

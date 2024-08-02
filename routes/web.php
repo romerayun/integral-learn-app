@@ -4,6 +4,7 @@ use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\ActivityTypeController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\ExcelImportController;
+use App\Http\Controllers\FinalQuizController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LearningProgrammController;
 use App\Http\Controllers\QuizController;
@@ -48,7 +49,7 @@ Route::controller(AuthenticationController::class)->group(function() {
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/', function () {
-        return view('main');
+        return redirect('/my-learning-programs');
     })->name('main');
 
     Route::get('/my-learning-programs', [LearningProgrammController::class, 'showPersonalLP'])->name('learning-program.my');
@@ -56,9 +57,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-learning-programs/{learning_program}/{theme}/{activity}', [LearningProgrammController::class, 'showActivity'])->name('learning-program.showActivity');
     Route::post('/my-learning-programs/{learning_program}/{theme}/{activity}/storeQuiz', [LearningProgrammController::class, 'storeQuiz'])->name('learning-program.storeQuiz');
     Route::post('/my-learning-programs/{learning_program}', [LearningProgrammController::class, 'storeTeacher'])->name('learning-program.storeTeacher');
-
-
     Route::post('/my-learning-programs/{learning_program}/{theme_id}/{activity_id}', [LearningProgrammController::class, 'completeActivity'])->name('learning_program.complete');
+    Route::get('/final-quiz/passing', [FinalQuizController::class, 'getFinalQuiz'])->name('final-quiz.getFinalQuiz');
+    Route::post('/final-quiz/passing', [FinalQuizController::class, 'getFinalQuizPost'])->name('final-quiz.getFinalQuizPost');
+    Route::get('/final-quiz/passing/{key}', [FinalQuizController::class, 'userQuizPassing'])->name('final-quiz.userPassing');
+    Route::post('/final-quiz/passing/{key}', [FinalQuizController::class, 'storeFinalQuiz'])->name('final-quiz.storeFinalQuiz');
+
+    Route::get('/profile-settings', [AuthenticationController::class, 'settings'])->name('user.profile-settings');
+    Route::post('/profile-settings', [AuthenticationController::class, 'storeAvatar'])->name('user.store-avatar');
+
 
     Route::prefix('manage')->middleware('activityLog')->group(function () {
 //        Route::resource('/users', UserAdminController::class);
@@ -92,7 +99,10 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/activities/edit/{activity}', [ActivityController::class, 'update'])->name('activity.update');
 
         Route::get('/activities/quiz/{activity}', [QuizController::class, 'constructQuiz'])->name('quiz.construct');
-
+        Route::resource('/final-quiz', FinalQuizController::class);
+        Route::get('/final-quiz/{key}/show', [FinalQuizController::class, 'showResults'])->name('final-quiz.show-results');
+        Route::get('/final-quiz/{key}/show/{id}', [FinalQuizController::class, 'showAnswers'])->name('final-quiz.show-answers');
+        Route::put('/final-quiz/disable/{final_quiz}', [FinalQuizController::class, 'disableQuiz'])->name('final-quiz.disable');
 
 //        Role routes
         Route::resource('/roles', RoleController::class)->middleware('role:super-user');

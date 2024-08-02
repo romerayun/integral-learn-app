@@ -195,6 +195,99 @@ if (! function_exists('getCountHoursTheme')) {
         }
 
 
+        if (!function_exists('getFinalQuizByLearningProgram')) {
+            function getFinalQuizByLearningProgram($lp, $countQuestions)
+            {
+                $learningProgram = LearningProgram::find($lp);
+
+                if (!$learningProgram) return false;
+                if (!$learningProgram->themes->count()) return false;
 
 
+                $questions = [];
 
+                foreach ($learningProgram->themes as $theme) {
+                    if (!$theme->activities->count()) continue;
+                    foreach ($theme->activities as $activity) {
+
+                        if ($activity->type_id == getIdTypeQuiz()) {
+                            if ($activity->questions->count()) {
+                                foreach ($activity->questions as $question)
+                                $questions[] = $question;
+                            }
+                        }
+                    }
+                }
+
+                return [
+                    'keys' => array_rand($questions, $countQuestions),
+                    'questions' => $questions,
+                ];
+            }
+        }
+
+        if (!function_exists('getSuccessAndFailFinalQuiz')) {
+            function getSuccessAndFailFinalQuiz($fQ)
+            {
+                if (count($fQ)) {
+                   $success = 0;
+                   $fail = 0;
+                   foreach ($fQ as $item) {
+                       if (checkPassedQuiz(count(json_decode($item->answers, true)), $item->countRightAnswers)) {
+                           $success++;
+                       } else {
+                           $fail++;
+                       }
+                   }
+                   $percentSuccess = round($success / count($fQ) * 100, 2);
+                   $percentFail = round($fail / count($fQ) * 100, 2);
+
+                   $res = "<br><span class='text-success'>Успешно сданных: $success ($percentSuccess%)</span><br><span class='text-danger'>Не сданных: $fail ($percentFail%)</span>";
+                   return $res;
+
+                } else {
+                    return '';
+                }
+            }
+        }
+
+
+        if (!function_exists('getQuestionById')) {
+            function getQuestionById($id)
+            {
+                $question = \App\Models\Question::where('id', $id)->first();
+                if (!$question) return false;
+                else return $question;
+            }
+        }
+
+
+        if (!function_exists('getCompleteActivity')) {
+            function getCompleteActivity($lp_id)
+            {
+
+                $learningProgram = LearningProgram::find($lp_id);
+
+                if (!$learningProgram) return 0;
+                if (!$learningProgram->themes->count()) return 0;
+
+                $activitiesCount = 0;
+                $completeActivitiesCount = 0;
+
+                foreach ($learningProgram->themes as $theme) {
+                    if (!$theme->activities->count()) continue;
+                    foreach ($theme->activities as $activity) {
+
+                        $activitiesCount++;
+                        if(checkCompleteActivity($learningProgram->id, $theme->id, $activity->id)) {
+                            $completeActivitiesCount++;
+                        }
+
+                    }
+                }
+
+                return round($completeActivitiesCount / $activitiesCount * 100, 2);
+
+
+            }
+        }

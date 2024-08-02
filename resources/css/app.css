@@ -303,3 +303,25 @@ body .square-color-warning {
     /*all:unset !important;*/
     /*cursor: not-allowed !important;*/
 }
+
+.layout-wrapper:not(.layout-horizontal) .bg-menu-theme .menu-inner>.menu-item.active:before {
+    height: 100% !important;
+}
+
+
+.answers {
+    list-style: none;
+    padding-left: 0;
+}
+
+.answers .correct:before {
+    content: '✅';
+    margin-right: 5px;
+}
+.answers .incorrect:before {
+    content: '❌';
+    margin-right: 5px;
+}
+.object-fit-cover {
+    object-fit: cover !important;
+}

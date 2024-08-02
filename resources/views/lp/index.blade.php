@@ -45,7 +45,7 @@
                                     <h5 class="card-title">{{$lp->name}}</h5>
                                     <div class="card-subtitle text-muted mb-3">Прогресс прохождения</div>
                                     <div class="progress">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: {{getCompleteActivity($lp->id)}}%" aria-valuenow="{{getCompleteActivity($lp->id)}}" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <p class="card-text text-gray mt-3">
                                         <b>Количество тем - {{$lp->themes->count()}}</b>

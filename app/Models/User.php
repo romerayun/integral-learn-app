@@ -70,12 +70,20 @@ class User extends Authenticatable
         return $this->hasMany(Result::class);
     }
 
+    public function teachers() {
+        return $this->hasMany(LearningProgramTeacher::class);
+    }
+
     public function groups() : BelongsToMany {
         return $this->belongsToMany(Group::class, 'group_users')->withPivot('id');
     }
 
     public function complete() {
         return $this->hasMany(CompleteActivity::class, 'user_id', 'id');
+    }
+
+    public function finalQuizResult() {
+        return $this->hasMany(FinalQuizResult::class);
     }
 
 

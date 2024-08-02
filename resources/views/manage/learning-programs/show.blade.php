@@ -151,10 +151,14 @@
                                 @csrf
                                 <div>
                                     <label for="user_id" class="form-label">Назначьте преподавателей для учебной программы<sup class="text-danger">*</sup></label>
+
                                     <select id="user_id" name="user_id" class="select2 form-select @if($errors->has('user_id')) is-invalid @endif" multiple>
                                         @foreach($users as $user)
-{{--                                            @if()--}}
-                                            <option value="{{$user->id}}">{{$user->surname}}</option>
+                                            @if(\App\Models\LearningProgramTeacher::where('learning_program_id', $lp->id)->where('user_id', $user->id)->count())
+                                                <option value="{{$user->id}}" selected>{{$user->getFullName()}}</option>
+                                            @else
+                                                <option value="{{$user->id}}">{{$user->getFullName()}}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                     <div class="form-text text-danger">

@@ -28,7 +28,7 @@
                                 <p class="text-nowrap"><i class="bx bxs-flag-alt bx-sm me-2"></i>Язык обучения: Русский</p>
                                 <p class="text-nowrap"><i class="bx bx-pencil bx-sm me-2"></i>Тем в курсе: {{$lp->themes->count()}}</p>
                                 <p class="text-nowrap"><i class="bx bx-file bx-sm me-2"></i>Рабочая программа:
-                                    <a href="{{asset($lp->working_program)}}" class="card-link" download="{{str()->slug($lp->name)}}">
+                                    <a href="{{asset('/storage/' . $lp->working_program)}}" class="card-link" download="{{str()->slug($lp->name)}}">
                                          Скачать
                                     </a>
                                 </p>
@@ -47,16 +47,24 @@
                         </div>
                         <hr class="my-4">
                         <h5>Преподаватель курса: </h5>
-                        <div class="d-flex justify-content-start align-items-center user-name">
-                            <div class="avatar-wrapper">
-                                <div class="avatar avatar-sm me-2">
-                                    <img src="{{Vite::asset('resources/assets/img/avatars/7.png')}}" alt="Avatar" class="rounded-circle">
-                                </div>
+                        @if($lp->teachers->count())
+                            <div class="d-flex justify-content-start align-items-center user-name">
+                                @foreach($lp->teachers as $teacher)
+                                    <div class="d-flex flex-column">
+                                        <span class="fw-medium">{{$teacher->user->getFullName()}}</span>
+                                    </div>
+                                @endforeach
+                                {{--<div class="avatar-wrapper">
+                                    <div class="avatar avatar-sm me-2">
+                                        <img src="{{Vite::asset('resources/assets/img/avatars/7.png')}}" alt="Avatar" class="rounded-circle">
+                                    </div>
+                                </div>--}}
+
                             </div>
-                            <div class="d-flex flex-column">
-                                <span class="fw-medium">Иванов Иван</span>
-                            </div>
-                        </div>
+                        @else
+                            <p>Преподаватели еще не были добавлены 😭</p>
+                        @endif
+
                     </div>
                 </div>
             </div>

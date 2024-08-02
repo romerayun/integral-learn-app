@@ -34,6 +34,18 @@ class LearningProgram extends Model
         return $this->belongsToMany(Theme::class, 'learning_program_themes')->orderByPivot('order', 'asc');
     }
 
+    public function teachers() {
+        return $this->hasMany(LearningProgramTeacher::class);
+    }
+
+    public function finalQuizzes() {
+        return $this->hasMany(FinalQuiz::class);
+    }
+
+    public function finalQuizResult() {
+        return $this->hasMany(FinalQuizResult::class);
+    }
+
     public function complete() {
         return $this->hasMany(CompleteActivity::class, 'learning_program_id', 'id');
     }

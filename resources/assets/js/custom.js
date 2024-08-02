@@ -453,6 +453,41 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('change', '#learning_program_final_quiz', function (e) {
+        $('#count-questions').val('');
+        if (this.value == 0) {
+            $('.count-questions-block').addClass('d-none');
+        } else {
+
+            $.ajax({
+                type : "GET",
+                headers: {
+                    'X-CSRF-TOKEN': $("input[name='_token']").val()
+                },
+                url : '/api/get-count-questions/' + this.value,
+                cache: false,
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                success: function (result) {
+
+                    if (result.code === 200) {
+
+                        $('.info-count-questions span').html(result.countQ);
+                        $('#count-questions').attr('placeholder', 'Количество вопросов (максимум - ' + result.countQ + ')');
+                        $('#count-questions').attr('max', result.countQ);
+
+                    } else {
+                        showToast('error', 'Ошибка', result.message);
+                    }
+
+                },
+            });
+
+            $('.count-questions-block').removeClass('d-none');
+        }
+    });
+
 
 
     if ($("#chart").length) {

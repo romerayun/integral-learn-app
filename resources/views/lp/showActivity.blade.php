@@ -111,7 +111,7 @@
                                             <div class="input_el d-flex align-items-center gap-2">
                                                 <label>
                                                     <input class="form-check-input" type="radio" name="answers[{{$question->id}}][answers][]"  id="r{{$question->id}}" value="{{$answer->id}}">
-                                                    <span>{{$question->text_question}}</span>
+                                                    <span>{{$answer->answer}}</span>
                                                 </label>
                                             </div>
                                         </li>

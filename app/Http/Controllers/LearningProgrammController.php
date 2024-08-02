@@ -282,17 +282,20 @@ class LearningProgrammController extends Controller
         DB::beginTransaction();
         try {
 
-            if (is_array($request->user_id)) {
-                foreach ($request->user_id as $user) {
-                    LearningProgramTeacher::create([
-                        'user_id' => $user,
-                        'learning_program_id' => $lp,
-                    ]);
-                }
-            } else {
-                LearningProgramTeacher::create($request->all());
-            }
+            LearningProgramTeacher::where('learning_program_id', $lp)->delete();
 
+            if ($request->user_id != null) {
+                if (is_array($request->user_id)) {
+                    foreach ($request->user_id as $user) {
+                        LearningProgramTeacher::create([
+                            'user_id' => $user,
+                            'learning_program_id' => $lp,
+                        ]);
+                    }
+                } else {
+                    LearningProgramTeacher::create($request->all());
+                }
+            }
 
             DB::commit();
             $request->session()->flash('success', 'Преподаватель успешно прикреплен 👍');

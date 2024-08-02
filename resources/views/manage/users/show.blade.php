@@ -28,7 +28,12 @@
                         </div>
                         <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
                             <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
-                                <img src="{{ Vite::asset('resources/assets/img/avatars/1.png')}}" alt="user image" class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img">
+                                @if(!auth()->user()->avatar)
+                                    <img class=" object-fit-cover user-profile-img d-block h-100 ms-0 ms-sm-4" src="{{ Vite::asset('resources/assets/img/no-image.jpeg') }}" alt="Avatar profile">
+                                @else
+                                    <img class=" object-fit-cover user-profile-img d-block h-100 ms-0 ms-sm-4" src="{{ asset('/storage/' . auth()->user()->avatar)}}" alt="Avatar profile">
+                                @endif
+{{--                                <img src="{{ Vite::asset('resources/assets/img/avatars/1.png')}}" alt="user image" class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img">--}}
                             </div>
                             <div class="flex-grow-1 mt-3 mt-sm-5">
                                 <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-4 flex-md-row flex-column gap-4">
@@ -50,15 +55,67 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <a href="javascript:void(0)" class="btn btn-primary text-nowrap">
-                                        <i class="bx bx-user-check me-1"></i>Connected
-                                    </a>
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="row mb-3">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="pb-2 border-bottom mb-2 mt-2">Персональные данные</h5>
+                            <div class="info-container">
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-2">
+                                        <span class="fw-bold me-2">Паспортные данные:</span>
+                                        <span>{!! $user->getPassport() !!}</span>
+                                    </li>
+                                    <li class="mb-2">
+                                        <span class="fw-bold me-2">Дата рождения:</span>
+                                        <span>{{\Carbon\Carbon::parse($user->date_of_birth)->format('d.m.Y')}} г.</span>
+                                    </li>
+                                    <li class="mb-2">
+                                        <span class="fw-bold me-2">Пол:</span>
+                                        <span>
+                                            @if($user->sex == 'M')
+                                                Мужской
+                                            @else
+                                                Женский
+                                            @endif
+                                        </span>
+                                    </li>
+                                    <li class="mb-2">
+                                        <span class="fw-bold me-2">СНИЛС:</span>
+                                        <span>
+                                            @if($user->snils)
+                                                {{$user->snils}}
+                                            @else
+                                                <span class="text-danger">Информация не заполнена</span>
+                                            @endif
+                                        </span>
+                                    </li>
+                                    <li class="mb-0">
+                                        <span class="fw-bold me-2">Гражданство по коду ОКСМ:</span>
+                                        <span>
+                                            @if($user->nationality)
+                                                {{$user->nationality}}
+                                            @else
+                                                <span class="text-danger">Информация не заполнена</span>
+                                            @endif
+                                        </span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="row">
                 <div class="col-lg-8 col-md-12">
@@ -92,8 +149,7 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Программа</th>
-                                                    <th>Статус</th>
-                                                    <th class="w-50">Прогресс обучения</th>
+                                                    <th class="w-75">Прогресс обучения</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -103,14 +159,11 @@
                                                         <td>{{$i}}</td>
                                                         <td>{{$lp->name}}</td>
                                                         <td>
-                                                            
-                                                        </td>
-                                                        <td>
                                                             <div class="d-flex justify-content-between align-items-center gap-3">
                                                                 <div class="progress w-100" style="height:10px;">
-                                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 64.75%" aria-valuenow="64.75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{getCompleteActivity($lp->id)}}%" aria-valuenow="{{getCompleteActivity($lp->id)}}" aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
-                                                                <small class="fw-medium">64.75%</small>
+                                                                <small class="fw-medium">{{getCompleteActivity($lp->id)}}%</small>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -176,65 +229,13 @@
                                             @endforeach
                                         </ul>
 
-                                        <a href="#" class="btn btn-primary">Посмотреть все</a>
                                     @endif
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mt-2">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="pb-2 border-bottom mb-2 mt-2">Персональные данные</h5>
-                                    <div class="info-container">
-                                        <ul class="list-unstyled">
-                                            <li class="mb-2">
-                                                <span class="fw-bold me-2">Паспортные данные:</span>
-                                                <span>{!! $user->getPassport() !!}</span>
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-bold me-2">Дата рождения:</span>
-                                                <span>{{\Carbon\Carbon::parse($user->date_of_birth)->format('d.m.Y')}} г.</span>
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-bold me-2">Пол:</span>
-                                                <span>
-                                            @if($user->sex == 'M')
-                                                        Мужской
-                                                    @else
-                                                        Женский
-                                                    @endif
-                                        </span>
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-bold me-2">СНИЛС:</span>
-                                                <span>
-                                            @if($user->snils)
-                                                        {{$user->snils}}
-                                                    @else
-                                                        <span class="text-danger">Информация не заполнена</span>
-                                                    @endif
-                                        </span>
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-bold me-2">Гражданство по коду ОКСМ:</span>
-                                                <span>
-                                            @if($user->nationality)
-                                                        {{$user->nationality}}
-                                                    @else
-                                                        <span class="text-danger">Информация не заполнена</span>
-                                                    @endif
-                                        </span>
-                                            </li>
-                                        </ul>
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

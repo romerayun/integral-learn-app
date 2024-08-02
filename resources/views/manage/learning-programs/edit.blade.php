@@ -59,7 +59,7 @@
                         <div class="row mt-2">
                             <div class="col">
                                 <label for="ckeditor" class="form-label">Аннотация учебной программы</label>
-                                <textarea name="annotation" id="ckeditor" rows="10" cols="80" required></textarea>
+                                <textarea name="annotation" id="ckeditor" rows="10" cols="80" required>{{$lp->annotation}}</textarea>
 {{--                                <textarea id="editor" name="annotation"></textarea>--}}
 {{--                                <textarea name="annotation" id="annotation" class="d-none">{!! $lp->annotation !!}</textarea>--}}
 {{--                                <div id="editor"></div>--}}
