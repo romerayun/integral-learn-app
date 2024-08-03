@@ -24,7 +24,12 @@
                 <div class="col-12">
                     <div class="card mb-4">
                         <div class="user-profile-header-banner">
-                            <img src="{{ Vite::asset('resources/assets/img/backgrounds/18.jpg') }}" alt="Banner image" class="rounded-top">
+                            @if(!auth()->user()->banner)
+                                <img class="rounded-top" src="{{ Vite::asset('resources/assets/img/no-image.jpeg') }}" alt="Banner profile">
+                            @else
+                                <img class="rounded-top" src="{{ asset('/storage/' . auth()->user()->banner)}}" alt="Banner profile">
+                            @endif
+{{--                            <img src="{{ Vite::asset('resources/assets/img/backgrounds/18.jpg') }}" alt="Banner image" class="rounded-top">--}}
                         </div>
                         <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
                             <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">

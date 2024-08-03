@@ -297,6 +297,7 @@ class LearningProgrammController extends Controller
                 }
             }
 
+
             DB::commit();
             $request->session()->flash('success', 'Преподаватель успешно прикреплен 👍');
             return back();

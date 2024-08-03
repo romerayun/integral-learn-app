@@ -64,7 +64,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/final-quiz/passing/{key}', [FinalQuizController::class, 'storeFinalQuiz'])->name('final-quiz.storeFinalQuiz');
 
     Route::get('/profile-settings', [AuthenticationController::class, 'settings'])->name('user.profile-settings');
-    Route::post('/profile-settings', [AuthenticationController::class, 'storeAvatar'])->name('user.store-avatar');
+    Route::post('/profile-settings/storeAvatar', [AuthenticationController::class, 'storeAvatar'])->name('user.store-avatar');
+    Route::post('/profile-settings/storeBanner', [AuthenticationController::class, 'storeBanner'])->name('user.store-banner');
+
+    Route::delete('/profile-settings/destroyAvatar', [AuthenticationController::class, 'destroyAvatar'])->name('user.destroy-avatar');
+    Route::delete('/profile-settings/destroyBanner', [AuthenticationController::class, 'destroyBanner'])->name('user.destroy-banner');
 
 
     Route::prefix('manage')->middleware('activityLog')->group(function () {

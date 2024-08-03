@@ -287,4 +287,69 @@ class AuthenticationController extends Controller
             return back();
         }
     }
+
+
+    public function storeBanner (Request $request)
+    {
+        DB::beginTransaction();
+        try {
+
+            if ($request->banner) {
+                $fileName = time().'_'.$request->banner->getClientOriginalName();
+                $filePath = $request->file('banner')->storeAs('banners', $fileName, 'public');
+
+                if(Auth::user()->banner) {
+                    Storage::disk('public')->delete(Auth::user()->banner);
+                }
+
+                Auth::user()->banner = $filePath;
+                Auth::user()->save();
+            }
+
+            DB::commit();
+            $request->session()->flash('success', 'Данные успешно добавлены 👍');
+            return back();
+        } catch (\Exception $exception) {
+            DB::rollback();
+            $request->session()->flash('error', 'При добавлении данных произошла ошибка 😢');
+            return back();
+        }
+    }
+
+    public function destroyAvatar() {
+        DB::beginTransaction();
+        try {
+            if(Auth::user()->avatar) {
+                Storage::disk('public')->delete(Auth::user()->avatar);
+            }
+
+            Auth::user()->avatar = null;
+            Auth::user()->save();
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Данные успешно удалены 👍');
+        } catch (\Exception $exception) {
+            DB::rollback();
+            return redirect()->back()->with('danger', 'При удалении данных произошла ошибка 😢');
+        }
+    }
+
+    public function destroyBanner() {
+        DB::beginTransaction();
+        try {
+            if(Auth::user()->banner) {
+                Storage::disk('public')->delete(Auth::user()->banner);
+            }
+
+            Auth::user()->banner = null;
+            Auth::user()->save();
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Данные успешно удалены 👍');
+            return back();
+        } catch (\Exception $exception) {
+            DB::rollback();
+            return redirect()->back()->with('danger', 'При удалении данных произошла ошибка 😢');
+        }
+    }
 }
