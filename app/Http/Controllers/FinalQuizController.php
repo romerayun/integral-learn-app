@@ -30,6 +30,8 @@ class FinalQuizController extends Controller
      */
     public function create()
     {
+        if(!auth()->user()->can('add final quiz')) abort(403);
+
         $learningPrograms = LearningProgram::all();
         return view('manage.final.create', compact('learningPrograms'));
     }
@@ -39,6 +41,8 @@ class FinalQuizController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->user()->can('add final quiz')) abort(403);
+
         DB::beginTransaction();
         try {
 
@@ -103,6 +107,8 @@ class FinalQuizController extends Controller
      */
     public function destroy(string $id)
     {
+        if(!auth()->user()->can('delete final quiz')) abort(403);
+
         $fQ = FinalQuiz::firstWhere('id', $id);
         if (!$fQ) return redirect()->back()->with('danger', 'При удалении данных произошла ошибка 😢');
         $fQ->delete();

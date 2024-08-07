@@ -24,6 +24,8 @@ class ActivityTypeController extends Controller
      */
     public function create()
     {
+        if(!auth()->user()->can('add activity')) abort(403);
+
         return view('manage.activity-types.create');
     }
 
@@ -32,6 +34,8 @@ class ActivityTypeController extends Controller
      */
     public function store(Request $request)
     {
+
+        if(!auth()->user()->can('add activity')) abort(403);
         $validatedData = $request->validate(
             [
                 'name' => 'required',
@@ -68,6 +72,8 @@ class ActivityTypeController extends Controller
      */
     public function edit(string $id)
     {
+        if(!auth()->user()->can('edit activity')) abort(403);
+
         $aT = ActivityType::firstWhere('id', $id);
         if (!$aT) abort(404);
         return view('manage.activity-types.update', compact('aT'));
@@ -78,6 +84,8 @@ class ActivityTypeController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if(!auth()->user()->can('edit activity')) abort(403);
+
         $validatedData = $request->validate(
             [
                 'name' => 'required',
@@ -98,6 +106,8 @@ class ActivityTypeController extends Controller
      */
     public function destroy(string $id)
     {
+        if(!auth()->user()->can('delete activity')) abort(403);
+
         $aT = ActivityType::firstWhere('id', $id);
         if (!$aT) return redirect()->back()->with('danger', 'При удалении данных произошла ошибка 😢');
         $aT->delete();

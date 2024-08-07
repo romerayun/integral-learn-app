@@ -7,11 +7,13 @@
 
     <div class="row">
         <div class="col-md-12">
+            @can('add groups')
             <div class="d-flex mb-4">
                 <a href="{{route('groups.create')}}" class="btn btn-success">
                     <span class="tf-icons bx bx-plus"></span>&nbsp;Добавить
                 </a>
             </div>
+            @endcan
 
 
             <div class="card mb-4">
@@ -30,7 +32,13 @@
                                     <th>Начало обучения</th>
                                     <th>Конец обучения</th>
                                     <th class="text-center">Обучающихся в группе</th>
+                                    @canany([
+                                           'edit groups',
+                                           'delete groups',
+                                           'add students groups'
+                                       ])
                                     <th>Взаимодействие</th>
+                                    @endcanany
                                 </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -64,24 +72,31 @@
                                         <td class="text-center">
                                             <span class="badge badge-center bg-primary">{{$item->users->count()}}</span>
                                         </td>
+                                        @canany([
+                                          'edit groups',
+                                          'delete groups',
+                                          'add students groups'
+                                        ])
                                         <td>
                                             <div class="text-end">
-
-
-
+                                                @can('edit groups')
                                                 <a href="{{route('groups.edit', ['group' => $item->id])}}" class="btn btn-sm btn-icon item-edit"><i class="bx bxs-edit"></i></a>
-
+                                                @endcan
+                                                @canany([
+                                                  'delete groups',
+                                                  'add students groups'
+                                                ])
                                                 <div class="d-inline-block">
                                                     <a  class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                                         <i class="bx bx-dots-vertical-rounded"></i>
                                                     </a>
                                                     <ul class="dropdown-menu dropdown-menu-end m-0">
-                                                        <li>
-                                                            <a href="{{route('learning-programs.show', ['learning_program' => $item->id])}}" class="dropdown-item"><span class="tf-icons bx bx-show"></span> Открыть</a>
-                                                        </li>
+                                                        @can('add students groups')
                                                         <li>
                                                             <a href="{{route('groups.add-user', ['group' => $item->id])}}" class="dropdown-item"><span class="tf-icons bx bx-user-plus"></span> Добавить обучающихся</a>
                                                         </li>
+                                                        @endcan
+                                                        @can('delete groups')
                                                         <li>
                                                             <form action="{{route('groups.destroy', ['group' => $item->id])}}" method="POST">
                                                                 @csrf
@@ -92,14 +107,14 @@
                                                                 </button>
                                                             </form>
                                                         </li>
+                                                        @endcan
                                                     </ul>
                                                 </div>
-
-
-
+                                                @endcanany
                                             </div>
                                         </td>
                                     </tr>
+                                    @endcanany
                                 @endforeach
                                 </tbody>
                             </table>

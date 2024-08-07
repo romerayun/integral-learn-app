@@ -18,7 +18,7 @@
             @csrf
 
             <div class="row">
-                <div class="col-lg-8 col-md-12">
+                <div class="@can('edit teacher lp') col-lg-8 @endcan @cannot('edit teacher lp') col-lg-12 @endcannot col-md-12">
                     <div class="card card-action mb-4">
                         <div class="card-header">
                             <div class="card-action-title">Управление учебной программой</div>
@@ -144,6 +144,8 @@
                         </div>
                 </div>
                 </div>
+
+                @can('edit teacher lp')
                 <div class="col-lg-4 col-md-12">
                     <div class="card card-action mb-4">
                         <div class="card-body">
@@ -178,6 +180,7 @@
                         </div>
                     </div>
                 </div>
+                @endcan
             </div>
 
 

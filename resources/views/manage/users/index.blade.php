@@ -7,16 +7,20 @@
 
     <div class="row">
         <div class="col-md-12">
-            @if(auth()->user()->can('add users'))
+            @canany(['add users', 'import users'])
                 <div class="d-flex mb-4 gap-2">
+                    @can('add users')
                     <a href="{{route('users.create')}}" class="btn btn-success">
                         <span class="tf-icons bx bx-plus"></span>&nbsp; Добавить
                     </a>
+                    @endcan
+                    @can('import users')
                     <a href="{{route('users.import')}}" class="btn btn-secondary">
                         <span class="tf-icons bx bx-upload"></span>&nbsp; Импорт данных
                     </a>
+                    @endcan
                 </div>
-            @endif
+            @endcanany
 
             @if(auth()->user()->can('all users'))
             <div class="card mb-4">
@@ -83,19 +87,33 @@
                                             </ul>
 
                                         </td>
-                                        @if(auth()->user()->can('show users') || auth()->user()->can('edit users') || auth()->user()->can('delete users'))
-
+                                        @canany([
+                                            'edit users',
+                                            'delete users',
+                                            'show users',
+                                            'repeat password users',
+                                        ])
                                         <td class="text-end">
                                             <div class="text-end">
+                                                @can('edit users')
                                                 <a href="{{route('users.edit', ['user' => $item->id])}}" class="btn btn-sm btn-icon item-edit"><i class="bx bxs-edit"></i></a>
+                                                @endcan
+                                                @canany([
+                                                    'delete users',
+                                                    'show users',
+                                                    'repeat password users',
+                                                ])
                                                 <div class="d-inline-block">
                                                     <a  class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                                         <i class="bx bx-dots-vertical-rounded"></i>
                                                     </a>
                                                     <ul class="dropdown-menu dropdown-menu-end m-0">
+                                                        @can('show users')
                                                         <li>
                                                             <a href="{{route('users.show', ['user' => $item->id])}}" class="dropdown-item"><span class="tf-icons bx bx-show"></span> Открыть</a>
                                                         </li>
+                                                        @endcan
+                                                        @can('repeat password users')
                                                         <li>
                                                             <form action="{{route('users.repeatPE', ['user' => $item->id])}}" method="POST">
                                                                 @csrf
@@ -104,6 +122,8 @@
                                                                 </button>
                                                             </form>
                                                         </li>
+                                                        @endcan
+                                                        @can('delete users')
                                                         <li>
                                                             <form action="{{route('users.destroy', ['user' => $item->id])}}" method="POST">
                                                                 @csrf
@@ -114,12 +134,13 @@
                                                                 </button>
                                                             </form>
                                                         </li>
+                                                        @endcan
                                                     </ul>
                                                 </div>
-
+                                                @endcanany
                                             </div>
                                         </td>
-                                        @endif
+                                        @endcanany
                                     </tr>
                                 @endforeach
                                 </tbody>

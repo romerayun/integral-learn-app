@@ -40,74 +40,119 @@
             <ul class="menu-inner py-1">
 
 
-                <li class="menu-header small text-uppercase">
-                    <span class="menu-header-text">Мое обучение</span>
-                </li>
+                @can('access edu')
+                    <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">Мое обучение</span>
+                    </li>
 
-                <li class="menu-item">
-                    <a href="{{route('learning-program.my')}}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bxs-graduation"></i>
-                        <div data-i18n="Студенты">Мои учебные программы</div>
-                    </a>
-                </li>
+                    <li class="menu-item">
+                        <a href="{{route('learning-program.my')}}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bxs-graduation"></i>
+                            <div data-i18n="Студенты">Мои учебные программы</div>
+                        </a>
+                    </li>
 
-                <li class="menu-item">
-                    <a href="{{route('final-quiz.getFinalQuiz')}}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bxs-customize"></i>
-                        <div data-i18n="Студенты">Итоговое тестирование</div>
-                    </a>
-                </li>
+                    <li class="menu-item">
+                        <a href="{{route('final-quiz.getFinalQuiz')}}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bxs-customize"></i>
+                            <div data-i18n="Студенты">Итоговое тестирование</div>
+                        </a>
+                    </li>
+                @endcan
 
+                @canany([
+                    'all users',
+                    'add users',
+                    'edit users',
+                    'delete users',
+                    'show users',
+                    'import users',
+                    'repeat password users',
+                    'all roles',
+                    'add roles',
+                    'edit roles',
+                    'delete roles',
+                    'all groups',
+                    'add groups',
+                    'edit groups',
+                    'delete groups',
+                    'add students groups',
+                    'all lp',
+                    'add lp',
+                    'edit lp',
+                    'delete lp',
+                    'show lp',
+                    'edit teacher lp',
+                    'all activities',
+                    'add activity',
+                    'edit activity',
+                    'delete activity',
+                    'all final quiz',
+                    'add final quiz',
+                    'edit final quiz',
+                    'delete final quiz',
+                    'show results final quiz',
+                    'close final quiz',
+                ])
+                    <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">Администрирование</span>
+                    </li>
 
+                    @can('all users')
+                        <li class="menu-item">
+                            <a href="{{route('users.index')}}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bxs-user"></i>
+                                <div>Пользователи</div>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="menu-header small text-uppercase">
-                    <span class="menu-header-text">Администрирование</span>
-                </li>
+                    @can('all roles')
+                        <li class="menu-item">
+                            <a href="{{route('roles.index')}}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bxs-low-vision"></i>
+                                <div>Роли пользователей</div>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="menu-item">
-                    <a href="{{route('users.index')}}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bxs-user"></i>
-                        <div>Пользователи</div>
-                    </a>
-                </li>
+                    @can('all groups')
+                        <li class="menu-item">
+                            <a href="{{route('groups.index')}}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bxs-group"></i>
+                                <div data-i18n="Студенты">Группы</div>
+                            </a>
+                        </li>
+                    @endcan
 
-                @role('super-user')
-                <li class="menu-item">
-                    <a href="{{route('roles.index')}}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bxs-low-vision"></i>
-                        <div>Роли пользователей</div>
-                    </a>
-                </li>
-                @endrole
+                    @can('all lp')
+                        <li class="menu-item">
+                            <a href="{{route('learning-programs.index')}}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bxs-graduation"></i>
+                                <div data-i18n="Студенты">Учебные программы</div>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="menu-item">
-                    <a href="{{route('groups.index')}}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bxs-group"></i>
-                        <div data-i18n="Студенты">Группы</div>
-                    </a>
-                </li>
+                    @can('all activities')
+                        <li class="menu-item">
+                            <a href="{{route('activity-types.index')}}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bxs-extension"></i>
+                                <div data-i18n="Студенты">Типы активностей</div>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="menu-item">
-                    <a href="{{route('learning-programs.index')}}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bxs-graduation"></i>
-                        <div data-i18n="Студенты">Учебные программы</div>
-                    </a>
-                </li>
+                    @can('all final quiz')
+                        <li class="menu-item">
+                            <a href="{{route('final-quiz.index')}}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bxs-customize"></i>
+                                <div data-i18n="Студенты">Итоговое тестирование</div>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="menu-item">
-                    <a href="{{route('activity-types.index')}}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bxs-extension"></i>
-                        <div data-i18n="Студенты">Типы активностей</div>
-                    </a>
-                </li>
-
-                <li class="menu-item">
-                    <a href="{{route('final-quiz.index')}}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bxs-customize"></i>
-                        <div data-i18n="Студенты">Итоговое тестирование</div>
-                    </a>
-                </li>
-
+                @endcanany
 
                 <li class="menu-header small text-uppercase">
                     <span class="menu-header-text">Настройки</span>

@@ -75,41 +75,43 @@ Route::middleware(['auth'])->group(function () {
 //        Route::resource('/users', UserAdminController::class);
         Route::get('/users', [UserAdminController::class, 'index'])->name('users.index')->middleware('can:all users');
         Route::get('/users/create', [UserAdminController::class, 'create'])->name('users.create')->middleware('can:add users');
-        Route::get('/users/import', [ExcelImportController::class, 'importPage'])->name('users.import');
-        Route::post('/users/import', [ExcelImportController::class, 'import'])->name('users.importPost');
+        Route::get('/users/import', [ExcelImportController::class, 'importPage'])->name('users.import')->middleware('can:import users');
+        Route::post('/users/import', [ExcelImportController::class, 'import'])->name('users.importPost')->middleware('can:import users');
         Route::post('/users', [UserAdminController::class, 'store'])->name('users.store')->middleware('can:add users');
         Route::get('/users/{user}', [UserAdminController::class, 'show'])->name('users.show')->middleware('can:show users');
         Route::get('/users/{user}/edit', [UserAdminController::class, 'edit'])->name('users.edit')->middleware('can:edit users');
         Route::put('/users/{user}', [UserAdminController::class, 'update'])->name('users.update')->middleware('can:edit users');
         Route::delete('/users/{user}', [UserAdminController::class, 'destroy'])->name('users.destroy')->middleware('can:delete users');
-        Route::post('/users/repeat/{user}', [UserAdminController::class, 'repeatPassEmail'])->name('users.repeatPE');
+        Route::post('/users/repeat/{user}', [UserAdminController::class, 'repeatPassEmail'])->name('users.repeatPE')->middleware('can:repeat password users');
 
 
 
-        Route::resource('/groups', GroupController::class);
-        Route::get('/groups/{group}/add-users', [GroupController::class, 'addUserToGroup'])->name('groups.add-user');
-        Route::post('/groups/{group}/add-users', [GroupController::class, 'addUserToGroupStore'])->name('groups.add-user-store');
-        Route::delete('/groups/{group}/add-users/{id}', [GroupController::class, 'destroyGroupUser'])->name('groups.destroy-group-user');
-        Route::resource('/learning-programs', LearningProgrammController::class);
-        Route::resource('/activity-types', ActivityTypeController::class);
+        Route::resource('/groups', GroupController::class)->middleware('can:all groups');
+        Route::get('/groups/{group}/add-users', [GroupController::class, 'addUserToGroup'])->name('groups.add-user')->middleware('can:add students group');
+        Route::post('/groups/{group}/add-users', [GroupController::class, 'addUserToGroupStore'])->name('groups.add-user-store')->middleware('can:add students group');
+        Route::delete('/groups/{group}/add-users/{id}', [GroupController::class, 'destroyGroupUser'])->name('groups.destroy-group-user')->middleware('can:add students group');
 
-        Route::get('activity-create/{learning_program}', [ActivityController::class, 'createActivity'])->name('activity.createActivity');
-        Route::get('activity-create/{learning_program}/{theme}', [ActivityController::class, 'createWithTheme'])->name('activity.createWithTheme');
-        Route::get('activity-create/edit/{activity}', [ActivityController::class, 'edit'])->name('activity.edit');
-        Route::get('activity-create/{activity}', [ActivityController::class, 'edit'])->name('quiz.construct');
+        Route::resource('/learning-programs', LearningProgrammController::class)->middleware('can:all lp');
 
-        Route::post('/activity-create', [ActivityController::class, 'store'])->name('activity.store');
-        Route::get('/activities/edit/{activity}', [ActivityController::class, 'edit'])->name('activity.edit');
-        Route::put('/activities/edit/{activity}', [ActivityController::class, 'update'])->name('activity.update');
+        Route::resource('/activity-types', ActivityTypeController::class)->middleware('can:all activities');
 
-        Route::get('/activities/quiz/{activity}', [QuizController::class, 'constructQuiz'])->name('quiz.construct');
-        Route::resource('/final-quiz', FinalQuizController::class);
-        Route::get('/final-quiz/{key}/show', [FinalQuizController::class, 'showResults'])->name('final-quiz.show-results');
-        Route::get('/final-quiz/{key}/show/{id}', [FinalQuizController::class, 'showAnswers'])->name('final-quiz.show-answers');
-        Route::put('/final-quiz/disable/{final_quiz}', [FinalQuizController::class, 'disableQuiz'])->name('final-quiz.disable');
+        Route::get('activity-create/{learning_program}', [ActivityController::class, 'createActivity'])->name('activity.createActivity')->middleware('can:show lp');
+        Route::get('activity-create/{learning_program}/{theme}', [ActivityController::class, 'createWithTheme'])->name('activity.createWithTheme')->middleware('can:show lp');
+        Route::get('activity-create/edit/{activity}', [ActivityController::class, 'edit'])->name('activity.edit')->middleware('can:show lp');
+        Route::get('activity-create/{activity}', [ActivityController::class, 'edit'])->name('quiz.construct')->middleware('can:show lp');
+        Route::post('/activity-create', [ActivityController::class, 'store'])->name('activity.store')->middleware('can:show lp');
+        Route::get('/activities/edit/{activity}', [ActivityController::class, 'edit'])->name('activity.edit')->middleware('can:show lp');
+        Route::put('/activities/edit/{activity}', [ActivityController::class, 'update'])->name('activity.update')->middleware('can:show lp');
+        Route::get('/activities/quiz/{activity}', [QuizController::class, 'constructQuiz'])->name('quiz.construct')->middleware('can:show lp');
+
+
+        Route::resource('/final-quiz', FinalQuizController::class)->middleware('can:all final quiz');
+        Route::get('/final-quiz/{key}/show', [FinalQuizController::class, 'showResults'])->name('final-quiz.show-results')->middleware('can:show results final quiz');
+        Route::get('/final-quiz/{key}/show/{id}', [FinalQuizController::class, 'showAnswers'])->name('final-quiz.show-answers')->middleware('can:show results final quiz');
+        Route::put('/final-quiz/disable/{final_quiz}', [FinalQuizController::class, 'disableQuiz'])->name('final-quiz.disable')->middleware('can:close final quiz');
 
 //        Role routes
-        Route::resource('/roles', RoleController::class)->middleware('role:super-user');
+        Route::resource('/roles', RoleController::class)->middleware('can:all roles');
     });
 });
 

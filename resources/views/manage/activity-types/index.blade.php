@@ -7,11 +7,13 @@
 
     <div class="row">
         <div class="col-md-12">
+            @can('add activity')
             <div class="d-flex mb-4">
                 <a href="{{route('activity-types.create')}}" class="btn btn-success">
                     <span class="tf-icons bx bx-plus"></span>&nbsp;Добавить
                 </a>
             </div>
+            @endcan
 
 
             <div class="card mb-4">
@@ -27,9 +29,14 @@
                                     <th>№</th>
                                     <th>Цвет отображения</th>
                                     <th>Наименование</th>
+                                    @canany([
+                                        'edit activity',
+                                        'delete activity'
+                                    ])
                                     <th>
                                         <div class="text-end pe-3">Взаимодействие</div>
                                     </th>
+                                    @endcanany
                                 </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -43,9 +50,16 @@
                                         <td>
                                             {{$item->name}}
                                         </td>
+                                        @canany([
+                                            'edit activity',
+                                            'delete activity'
+                                        ])
                                         <td>
                                             <div class="text-end">
+                                                @can('edit activity')
                                                 <a href="{{route('activity-types.edit', ['activity_type' => $item->id])}}" class="btn btn-sm btn-icon item-edit"><i class="bx bxs-edit"></i></a>
+                                                @endcan
+                                                @can('delete activity')
                                                 <div class="d-inline-block">
                                                     <a  class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                                         <i class="bx bx-dots-vertical-rounded"></i>
@@ -63,8 +77,10 @@
                                                         </li>
                                                     </ul>
                                                 </div>
+                                                @endcan
                                             </div>
                                         </td>
+                                        @endcanany
                                     </tr>
                                 @endforeach
                                 </tbody>

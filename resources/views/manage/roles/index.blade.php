@@ -8,15 +8,19 @@
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex mb-4">
+                @can('add roles')
                 <a href="{{route('roles.create')}}" class="btn btn-success">
                     <span class="tf-icons bx bx-plus"></span>&nbsp;Добавить
                 </a>
+                @endcan
             </div>
 
 
             <div class="card mb-4">
-                <h5 class="card-header">Список ролей</h5>
-                <div class="card-body">
+                <h5 class="card-header pb-1">Список ролей</h5>
+
+                <div class="card-body mt-0 pt-0">
+                    <p class="text-primary mt-0 fw-bold">Удаление ролей "Преподаватель", "Студент" может привести к неккоректной работе системы и потери информации</p>
                     <div class="table-responsive text-nowrap">
                         @if($roles->isEmpty())
                             <p class="fw-bold">Ролей не найдено 😭</p>
@@ -28,9 +32,14 @@
                                     <th>Цвет отображения</th>
                                     <th>Наименование</th>
                                     <th>Права доступа</th>
+                                    @canany([
+                                           'edit roles',
+                                           'delete roles',
+                                       ])
                                     <th>
                                         <div class="text-end pe-3">Взаимодействие</div>
                                     </th>
+                                    @endcanany
                                 </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -60,9 +69,16 @@
                                             @endif
 
                                         </td>
+                                        @canany([
+                                            'edit roles',
+                                            'delete roles',
+                                        ])
                                         <td>
                                             <div class="text-end">
+                                                @can('edit roles')
                                                 <a href="{{route('roles.edit', ['role' => $item->id])}}" class="btn btn-sm btn-icon item-edit"><i class="bx bxs-edit"></i></a>
+                                                @endcan
+                                                @can('delete roles')
                                                 <div class="d-inline-block">
                                                     <a  class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                                         <i class="bx bx-dots-vertical-rounded"></i>
@@ -80,8 +96,10 @@
                                                         </li>
                                                     </ul>
                                                 </div>
+                                                @endcan
                                             </div>
                                         </td>
+                                        @endcanany
                                     </tr>
                                 @endforeach
                                 </tbody>

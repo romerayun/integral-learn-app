@@ -27,6 +27,8 @@ class GroupController extends Controller
      */
     public function create()
     {
+        if(!auth()->user()->can('add groups')) abort(403);
+
         $learningPrograms = LearningProgram::all();
         return view('manage.groups.create', compact('learningPrograms'));
     }
@@ -36,6 +38,8 @@ class GroupController extends Controller
      */
     public function store(StoreGroup $request)
     {
+        if(!auth()->user()->can('add groups')) abort(403);
+
         DB::beginTransaction();
         try {
 
@@ -76,6 +80,8 @@ class GroupController extends Controller
      */
     public function edit(string $id)
     {
+        if(!auth()->user()->can('edit groups')) abort(403);
+
         $group = Group::firstWhere('id', $id);
         if (!$group) abort(404);
 
@@ -95,6 +101,7 @@ class GroupController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if(!auth()->user()->can('edit groups')) abort(403);
 
         $group = Group::firstWhere('id', $id);
         if (!$group) abort(404);
@@ -142,6 +149,8 @@ class GroupController extends Controller
      */
     public function destroy(string $id)
     {
+        if(!auth()->user()->can('delete groups')) abort(403);
+
         $group = Group::firstWhere('id', $id);
         if (!$group) return redirect()->back()->with('danger', 'При удалении данных произошла ошибка 😢');
         $group->delete();

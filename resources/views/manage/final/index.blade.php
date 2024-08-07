@@ -7,11 +7,13 @@
 
     <div class="row">
         <div class="col-md-12">
+            @can('add final quiz')
             <div class="d-flex mb-4">
                 <a href="{{route('final-quiz.create')}}" class="btn btn-success">
                     <span class="tf-icons bx bx-plus"></span>&nbsp;Создать тестирование
                 </a>
             </div>
+            @endcan
 
 
             <div class="card mb-4">
@@ -31,9 +33,15 @@
                                     <th>Ключ доступа</th>
                                     <th>Дата/Время создания</th>
                                     <th>Прохождение тестирования</th>
+                                    @canany([
+                                        'delete final quiz',
+                                        'show results final quiz',
+                                        'close final quiz',
+                                     ])
                                     <th>
                                         <div class="text-end pe-3">Взаимодействие</div>
                                     </th>
+                                    @endcanany
                                 </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -61,15 +69,29 @@
                                         <td>
                                             Попыток: {{$item->finalQuizResult->count()}}  {!! getSuccessAndFailFinalQuiz($item->finalQuizResult) !!}
                                         </td>
+                                        @canany([
+                                            'delete final quiz',
+                                            'show results final quiz',
+                                            'close final quiz',
+                                         ])
                                         <td>
                                             <div class="text-end">
 
                                                 <div class="d-inline-block">
+                                                    @can('show results final quiz')
                                                     <a href="{{route('final-quiz.show-results', ['key' => $item->key])}}" class="btn btn-sm btn-icon item-edit" data-bs-toggle="tooltip"  data-bs-placement="top" data-bs-title="Посмотреть результаты"><i class="bx bx-show"></i></a>
+                                                    @endcan
+
+                                                    @canany([
+                                                        'delete final quiz',
+                                                        'close final quiz',
+                                                    ])
+
                                                     <a class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                                         <i class="bx bx-dots-vertical-rounded"></i>
                                                     </a>
                                                     <ul class="dropdown-menu dropdown-menu-end m-0">
+                                                        @can('close final quiz')
                                                         <li>
                                                             <form action="{{route('final-quiz.disable', ['final_quiz' => $item->id])}}" method="POST">
                                                                 @csrf
@@ -79,6 +101,8 @@
                                                                 </button>
                                                             </form>
                                                         </li>
+                                                        @endcan
+                                                        @can('delete final quiz')
                                                         <li>
                                                             <form action="{{route('final-quiz.destroy', ['final_quiz' => $item->id])}}" method="POST">
                                                                 @csrf
@@ -89,10 +113,13 @@
                                                                 </button>
                                                             </form>
                                                         </li>
+                                                        @endcan
                                                     </ul>
+                                                    @endcanany
                                                 </div>
                                             </div>
                                         </td>
+                                        @endcanany
                                     </tr>
                                 @endforeach
                                 </tbody>

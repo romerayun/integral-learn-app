@@ -7,11 +7,13 @@
 
     <div class="row">
         <div class="col-md-12">
+            @can('add lp')
             <div class="d-flex mb-4">
                 <a href="{{route('learning-programs.create')}}" class="btn btn-success">
                     <span class="tf-icons bx bx-plus"></span>&nbsp; Добавить
                 </a>
             </div>
+            @endcan
 
 
             <div class="card mb-4">
@@ -28,7 +30,13 @@
                                     <th>Наименование учебной программы</th>
                                     <th>Аннотация</th>
                                     <th>Рабочая программа</th>
+                                    @canany([
+                                           'edit lp',
+                                           'delete lp',
+                                           'show lp',
+                                       ])
                                     <th>Взаимодействие</th>
+                                    @endcanany
                                 </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -49,19 +57,31 @@
                                                 <span class="text-danger">Рабочая программа не добавлена</span>
                                             @endif
                                         </td>
+                                        @canany([
+                                           'edit lp',
+                                           'delete lp',
+                                           'show lp',
+                                       ])
                                         <td>
                                             <div class="text-end">
-
+                                                @can('edit lp')
                                                 <a href="{{route('learning-programs.edit', ['learning_program' => $item->id])}}" class="btn btn-sm btn-icon item-edit"><i class="bx bxs-edit"></i></a>
-
+                                                @endcan
+                                                @canany([
+                                                   'delete lp',
+                                                   'show lp',
+                                                ])
                                                 <div class="d-inline-block">
                                                     <a  class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                                         <i class="bx bx-dots-vertical-rounded"></i>
                                                     </a>
                                                     <ul class="dropdown-menu dropdown-menu-end m-0">
+                                                        @can('show lp')
                                                         <li>
                                                             <a href="{{route('learning-programs.show', ['learning_program' => $item->id])}}" class="dropdown-item"><span class="tf-icons bx bx-show"></span> Открыть</a>
                                                         </li>
+                                                        @endcan
+                                                        @can('delete lp')
                                                         <li>
                                                             <form action="{{route('learning-programs.destroy', ['learning_program' => $item->id])}}" method="POST">
                                                                 @csrf
@@ -72,15 +92,13 @@
                                                                 </button>
                                                             </form>
                                                         </li>
+                                                        @endcan
                                                     </ul>
                                                 </div>
-
-
-
-
-
+                                                @endcanany
                                             </div>
                                         </td>
+                                        @endcanany
                                     </tr>
                                 @endforeach
                                 </tbody>

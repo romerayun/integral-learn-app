@@ -33,6 +33,8 @@ class LearningProgrammController extends Controller
      */
     public function create()
     {
+        if(!auth()->user()->can('add lp')) abort(403);
+
         return view('manage.learning-programs.create');
     }
 
@@ -41,6 +43,8 @@ class LearningProgrammController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->user()->can('add lp')) abort(403);
+
         DB::beginTransaction();
         try {
 
@@ -69,6 +73,8 @@ class LearningProgrammController extends Controller
      */
     public function show(string $id)
     {
+        if(!auth()->user()->can('show lp')) abort(403);
+
         $lp = LearningProgram::firstWhere('id', $id);
         if (!$lp) abort(404);
 
@@ -84,6 +90,8 @@ class LearningProgrammController extends Controller
      */
     public function edit(string $id)
     {
+        if(!auth()->user()->can('edit lp')) abort(403);
+
         $lp = LearningProgram::firstWhere('id', $id);
         if (!$lp) abort(404);
 
@@ -95,6 +103,8 @@ class LearningProgrammController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if(!auth()->user()->can('edit lp')) abort(403);
+
         $lp = LearningProgram::firstWhere('id', $id);
         if (!$lp) abort(404);
 
@@ -130,6 +140,8 @@ class LearningProgrammController extends Controller
      */
     public function destroy(string $id)
     {
+        if(!auth()->user()->can('delete lp')) abort(403);
+
         $lp = LearningProgram::firstWhere('id', $id);
 
         if (!$lp) abort(404);

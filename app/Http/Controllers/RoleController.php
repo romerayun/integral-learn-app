@@ -18,7 +18,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::orderBy('name')->where('name', '!=', 'super-user')->get();
+        $roles = Role::orderBy('name')->where('name', '!=', 'super-user')->where('id', '!=', auth()->user()->roles[0]->id)->get();
 
         return view('manage.roles.index', compact([
             'roles',
@@ -30,7 +30,9 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::orderBy('name')->get();
+        if(!auth()->user()->can('add roles')) abort(403);
+
+        $permissions = Permission::orderBy('id')->get();
 
         return view('manage.roles.create', compact([
             'permissions'
@@ -42,6 +44,8 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->user()->can('add roles')) abort(403);
+
         $request->validate([
             'color' => 'required',
             'name' => 'required|max:255|unique:roles,name',
@@ -75,7 +79,7 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -83,6 +87,9 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
+
+        if(!auth()->user()->can('edit roles')) abort(403);
+
         $role = Role::where('name', '!=', 'super-user')->findOrFail($id);
         if (!$role) abort(404);
         $permissions = Permission::orderBy('name')->get();
@@ -98,6 +105,8 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if(!auth()->user()->can('edit roles')) abort(403);
+
         $request->validate([
             'color' => 'required',
             'name' => 'required|max:255|unique:roles,name',
@@ -134,6 +143,8 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
+        if(!auth()->user()->can('delete roles')) abort(403);
+
         $role = Role::firstWhere('id', $id);
         if (!$role) return redirect()->back()->with('danger', 'При удалении данных произошла ошибка 😢');
         $role->delete();
