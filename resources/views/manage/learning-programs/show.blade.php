@@ -164,8 +164,8 @@
                                         @endforeach
                                     </select>
                                     <div class="form-text text-danger">
-                                        @if($errors->has('theme_id'))
-                                            @foreach($errors->get('theme_id') as $message)
+                                        @if($errors->has('user_id'))
+                                            @foreach($errors->get('user_id') as $message)
                                                 {{$message}}<br>
                                             @endforeach
                                         @endif

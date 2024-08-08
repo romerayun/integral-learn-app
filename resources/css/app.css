@@ -351,3 +351,6 @@ body .square-color-warning {
 .offcanvas.showing, .offcanvas.show:not(.hiding) {
     z-index: 99999 !important;
 }
+span.select2-container, .select2-container--default, .select2-container--default * {
+    z-index: 99999 !important;
+}

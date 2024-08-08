@@ -136,7 +136,12 @@ class FinalQuizController extends Controller
 
     public function userQuizPassing($key) {
 
-        $finalQuiz = FinalQuiz::firstWhere('key', $key);
+        $finalQuiz = FinalQuiz::where('key', $key)->where('isActive', 1)->first();
+
+        if (!$finalQuiz) {
+            return redirect()->back()->with('error', 'К сожалению, итоговое тестирование по данному коду доступа не найдено');
+        }
+
         $result = null;
         if ($finalQuiz) {
             $result = FinalQuizResult::where('final_quiz_id', $finalQuiz->id)->where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
