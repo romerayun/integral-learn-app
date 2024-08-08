@@ -343,3 +343,11 @@ body .square-color-warning {
 .del-absolute-link:hover {
     color: #cb2027;
 }
+
+.offcanvas-backdrop {
+    z-index: 9999 !important;
+}
+
+.offcanvas.showing, .offcanvas.show:not(.hiding) {
+    z-index: 99999 !important;
+}
